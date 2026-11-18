@@ -90,7 +90,7 @@ async function load(){
     CFG=JSON.parse(localStorage.getItem("nx_cfg")||"null");
     if(CFG) $("#offbar").style.display="block";
   }
-  if(!CFG){ $("#grid").innerHTML=`<div class="empty" style="grid-column:1/3"><div style="font-size:30px">📡</div><b style="color:#ECE9F7">Could not reach the NEXORA server</b><br><span style="font-size:11.5px">Check internet and retry — the app will also work offline once loaded once.</span><br><br><button onclick="load()" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;font-size:12px">⟳ RETRY</button> <button onclick="showSetup()" style="background:none;border:1px solid rgba(167,139,250,.3);color:#A79FC4;padding:10px 16px;border-radius:10px;font-size:12px">Change server URL</button></div>`; return }
+  if(!CFG){ $("#grid").innerHTML=`<div class="empty" style="grid-column:1/3"><div style="font-size:30px">📡</div><b style="color:#ECE9F7">Could not reach the NEXORA server</b><br><span style="font-size:11.5px">Check internet and retry — the app will also work offline once loaded once.</span><br><br><button onclick="if(location.protocol==='file:'&&window.NexoraNative){NexoraNative.reloadOnline()}else{load()}" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;font-size:12px">⟳ RETRY</button> <button onclick="showSetup()" style="background:none;border:1px solid rgba(167,139,250,.3);color:#A79FC4;padding:10px 16px;border-radius:10px;font-size:12px">Change server URL</button></div>`; return }
   $("#ver").textContent="v"+(JSON.parse(localStorage.getItem("nx_v")||"0"));
   render("home");
 }
