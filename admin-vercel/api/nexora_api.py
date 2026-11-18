@@ -8,7 +8,7 @@ NEXORA Backend + Admin API (Phase 0-1 working build)
 import json, os, sqlite3, time, hashlib, secrets, threading
 from flask import Flask, request, jsonify, g, make_response
 
-DB_PATH = os.environ.get("NEXORA_DB") or ("/tmp/nexora.db" if os.environ.get("VERCEL") else os.path.join(os.path.dirname(__file__), "nexora.db"))
+DB_PATH = os.environ.get("NEXORA_DB", os.path.join(os.path.dirname(__file__), "nexora.db"))
 TOKEN_TTL = 7 * 86400
 LOCK_LIMIT, LOCK_WINDOW = 5, 300
 _sessions = {}          # token -> {admin_id, exp}
@@ -21,10 +21,29 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
 
 # ---------- DB helpers ----------
+_MEM_KEEPER = None
+_MEM_LOCK = threading.Lock()
+
 def con():
+    global _MEM_KEEPER
+    if os.environ.get("VERCEL"):
+        if _MEM_KEEPER is None:
+            with _MEM_LOCK:
+                if _MEM_KEEPER is None:
+                    k = sqlite3.connect("file::memory:?cache=shared", uri=True, check_same_thread=False, timeout=15)
+                    k.row_factory = sqlite3.Row
+                    k.executescript(SCHEMA)
+                    _seed_core(k)
+                    k.commit()
+                    _MEM_KEEPER = k
+        c = sqlite3.connect("file::memory:?cache=shared", uri=True, check_same_thread=False, timeout=15)
+        c.row_factory = sqlite3.Row
+        c.execute("PRAGMA busy_timeout=8000")
+        return c
     c = sqlite3.connect(DB_PATH, timeout=15)
     c.row_factory = sqlite3.Row
     c.execute("PRAGMA journal_mode=WAL")
+    c.execute("PRAGMA busy_timeout=8000")
     return c
 
 SCHEMA = """
@@ -48,8 +67,7 @@ def audit(actor, action, detail=""):
     c = con(); c.execute("INSERT INTO audit_logs(ts,actor,action,detail) VALUES(?,?,?,?)", (now(), actor, action, json.dumps(detail)[:500])); c.commit(); c.close()
 
 # ---------- seed ----------
-def seed():
-    c = con(); c.executescript(SCHEMA)
+def _seed_core(c):
     if not c.execute("SELECT 1 FROM admin_users").fetchone():
         salt = secrets.token_hex(16)
         h = hashlib.pbkdf2_hmac("sha256", b"Nexora@Boss2026", salt.encode(), 120_000).hex()
@@ -59,16 +77,46 @@ def seed():
         for i, n in enumerate(cats): c.execute("INSERT INTO categories(name,sort) VALUES(?,?)", (n, i))
         cat_id = {n: i + 1 for i, n in enumerate(cats)}
         cards = [
-            ("BAT UNIVERSE", "Hub - all study apps in one place", "https://bat.universe.example/logo.png", "Portals", 1, "HOT", [("https://bat.unuverse.workers.dev/", 1, 1), ("https://batuniverse.lovable.app/", 2, 0)]),
-            ("PHYSICS WALLAH", "PW batches - full study library", "", "Study Apps", 1, "NEW", [("https://bat.pw1.workers.dev/", 1, 1), ("https://bat.pww2.workers.dev/", 2, 0), ("https://bat.pww3.workers.dev/", 3, 0), ("https://bat.pw4.workers.dev/", 4, 0)]),
-            ("VIDYAGRAM", "Vidyagram batches portal", "", "Study Apps", 1, "TRENDING", [("https://bat.vidya1.workers.dev/", 1, 1), ("https://bat.vg2.workers.dev/", 2, 0), ("https://bat.vg3.workers.dev/", 3, 0), ("https://bat.vg4.workers.dev/", 4, 0)]),
-            ("NEXT TOPPER", "Next Topper batches", "", "Study Apps", 0, "", [("https://bat.nextt1.workers.dev/", 1, 1), ("https://bat.nextt2.workers.dev/", 2, 0), ("https://bat.nextt3.workers.dev/", 3, 0), ("https://bat.nextt4.workers.dev/", 4, 0)]),
-            ("KHAN G S", "Khan Global Studies batches", "", "Study Apps", 0, "", [("https://bat.kgs1.workers.dev/", 1, 1), ("https://bat.kgs2.workers.dev/", 2, 0), ("https://bat.kgs3.workers.dev/", 3, 0), ("https://bat.kgs4.workers.dev/", 4, 0)]),
-            ("CAREER WILL", "CareerWill batches", "", "Study Apps", 0, "", [("https://bat.cwill1.workers.dev/", 1, 1), ("https://bat.cwill2.workers.dev/", 2, 0), ("https://bat.cwill3.workers.dev/", 3, 0), ("https://bat.cwill4.workers.dev/", 4, 0)]),
-            ("DISHA O C", "Disha online coaching batches", "", "Study Apps", 0, "", [("https://bat.docc1.workers.dev/", 1, 1), ("https://bat.doc22.workers.dev/", 2, 0), ("https://bat.doc3.workers.dev/", 3, 0), ("https://bat.doc44.workers.dev/", 4, 0)]),
-            ("PARMAR SSC", "Parmar SSC free batches + Academy", "", "Study Apps", 1, "VIP", [("https://bat.parmar1.workers.dev/", 1, 1), ("https://bat.parmar2.workers.dev/", 2, 0), ("https://bat.parmar3.workers.dev/", 3, 0), ("https://bat.parmar4.workers.dev/", 4, 0)]),
-            ("SCIENCE MAGNET", "Multi-app learning portal (GK/Parmar/VG/Disha)", "", "Portals", 1, "NEW", [("https://science-magnet.ai.studio/", 1, 1)]),
-            ("RWA PORTAL", "Rojgar With Ankit official learning portal", "", "Portals", 0, "", [("https://ais-pre-puxho4o57upkknekv3mgg7-49225910278.asia-east1.run.app/", 1, 1)]),
+            ("FREE WEBSITE ALL IN ONE", "All study websites in one", "", "Study Apps", 1, "HOT", [("https://studyuniversecourses.netlify.app/", 1, 1), ("http://codexstudys.cc.cd", 2, 0), ("https://primeverse.eu.cc/", 3, 0)]),
+            ("ALL BOOKS", "Complete books library", "", "Study Apps", 0, "", [("https://vidya-verse.ai.studio/", 1, 1)]),
+            ("TARGET BOARD", "Target board study tool", "", "Study Apps", 0, "", [("https://mgayushff.github.io/Target-board/", 1, 1), ("https://ashrafcyberx-tb.vercel.app/", 2, 0)]),
+            ("EDUTERIA", "Eduteria courses portal", "", "Study Apps", 0, "", [("https://edu.codewithvivek.qzz.io/eduteria/courses", 1, 1), ("https://all.codewithvivek.qzz.io/eduteria", 2, 0)]),
+            ("NEXTTOPPERS", "Next Toppers batches", "", "Study Apps", 1, "NEW", [("https://nt.toplixeducation.site/", 1, 1), ("https://nexus-toppers.ai.studio/", 2, 0)]),
+            ("FUTUREKUL", "Futurekul learning", "", "Study Apps", 0, "", [("https://nexthope.site/futurekul/", 1, 1)]),
+            ("KGS", "Khan Global Studies batches", "", "Study Apps", 0, "", [("https://pwnexus.eu.cc/khan-global", 1, 1), ("https://sahukgs.com/batches", 2, 0)]),
+            ("SCIENCE MAGNET / PARMAR / GK GS", "Multi-platform free portal", "", "Portals", 1, "HOT", [("https://sciencemagnetfree.vercel.app/", 1, 1)]),
+            ("KGS TEST", "KGS test series", "", "Study Apps", 0, "", [("https://test.sahukgs.com/", 1, 1)]),
+            ("VIDYAGRAM", "Vidyagram batches", "", "Study Apps", 1, "TRENDING", [("https://vidyagram.edgeone.dev", 1, 1), ("https://mgayushff.github.io/Vidyagraam/", 2, 0), ("https://batvidyagram.lovable.app/", 3, 0)]),
+            ("TOPPER'S WISDOM", "Topper's Wisdom batches", "", "Study Apps", 0, "", [("https://tw.learnvortex.cc.cd/", 1, 1)]),
+            ("PI PRO (OTT)", "Pi OTT classes", "", "Portals", 0, "", [("https://pi.studyparcham.site/piott?id=6a916ab7b263325123c58d0c&name=Class%2010th&parent=6a916930a05e247fa6f5a478&cohortId=", 1, 1)]),
+            ("KD LIVE", "KD Live batches", "", "Study Apps", 0, "", [("https://kd-live.netlify.app/", 1, 1)]),
+            ("PHYSICS WALLAH [PW]", "PW batches", "", "Study Apps", 1, "HOT", [("https://stream.aryavidya.cc/#/batches", 1, 1), ("https://pwphonix.studynexus.dpdns.org/study/batches", 2, 0), ("https://pw.toplixeducation.site/", 3, 0)]),
+            ("GYAN BINDU + KGS", "Gyan Bindu batches", "", "Study Apps", 0, "", [("https://madxrohitbihar-app.github.io/GYAN-BINDU/", 1, 1)]),
+            ("STUDY IQ", "StudyIQ portal", "", "Study Apps", 0, "", [("https://spidyiq.vercel.app/", 1, 1)]),
+            ("RAKSHA ACADEMY", "Raksha Academy batches", "", "Study Apps", 0, "", [("https://raksha.codewithvivek.qzz.io/", 1, 1)]),
+            ("ROJGAR WITH ANKIT [RWA]", "RWA batches", "", "Portals", 1, "VIP", [("https://primeverse.eu.cc/rwa", 1, 1), ("https://rwa.toplixeducation.site/", 2, 0), ("https://delta-verse.xyz/rwa", 3, 0)]),
+            ("CARRIER WILL", "CareerWill batches", "", "Study Apps", 0, "", [("https://bat.unuverse.workers.dev/", 1, 1)]),
+            ("CDS JOURNEY", "CDS streaming batches", "", "Study Apps", 0, "", [("https://cds.streamfiles.eu.org/", 1, 1)]),
+            ("SELECTION WAY", "Selection Way batches", "", "Study Apps", 0, "", [("https://nexthope.cc.cd/sw/", 1, 1), ("https://selectionway.streamfiles.eu.org/", 2, 0)]),
+            ("YES OFFICER", "Yes Officer batches", "", "Study Apps", 0, "", [("https://yesofficerba.vercel.app/home", 1, 1)]),
+            ("ALLEN", "Allen batches", "", "Study Apps", 0, "", [("https://nexthope.cc.cd/Allen/", 1, 1)]),
+            ("GUIDELY XPRESS CLASS", "Guidely classes", "", "Study Apps", 0, "", [("https://guidely.learnvortex.cc.cd/", 1, 1)]),
+            ("PINNACLE E-LIBRARY", "Pinnacle e-library", "", "Study Apps", 0, "", [("https://pinbook.learnvortex.cc.cd/", 1, 1)]),
+            ("MD CLASSES", "MD Classes", "", "Study Apps", 0, "", [("http://md-rajnishprime.space-z.ai", 1, 1)]),
+            ("DISHA ONLINE CLASSES", "Disha batches", "", "Study Apps", 1, "NEW", [("https://primeverse.eu.cc/disha", 1, 1)]),
+            ("PARMAR ACADEMY", "Parmar Academy batches", "", "Study Apps", 0, "", [("https://vividellorvii.vercel.app/", 1, 1)]),
+            ("SSC", "SSC study portal", "", "Study Apps", 0, "", [("https://dora-dora-study.vercel.app/", 1, 1)]),
+            ("GS VISION", "GS Vision batches", "", "Study Apps", 0, "", [("https://madxrohitbihar-app.github.io/GS-Vision/", 1, 1)]),
+            ("UNACADEMY", "Unacademy batches", "", "Study Apps", 0, "", [("https://nexthope.site/unacademy/", 1, 1)]),
+            ("SOME SPECIAL BATCHES", "Special batches portal", "", "Study Apps", 0, "", [("https://mafiyaabhi.vercel.app/", 1, 1)]),
+            ("SOME SPECIAL PLATFORM", "Special platform", "", "Portals", 0, "", [("https://vividellorvii.vercel.app/", 1, 1)]),
+            ("FREE EDUCATION FOR ALL", "Free education aggregator", "", "Portals", 0, "", [("https://app.akkistudyx.in/app?view=pw_catalog", 1, 1)]),
+            ("SOME LOVABLE PLATFORM", "Lovable platform", "", "Portals", 0, "", [("https://goal-getters-two.vercel.app", 1, 1)]),
+            ("SOME AVAILABLE PLATFORM", "ModStudyVerse", "", "Portals", 0, "", [("https://madxrohitbihar-app.github.io/ModStudyVerse/", 1, 1)]),
+            ("FREE MOCK TESTS", "Mock tests + ranking", "", "Tools", 0, "", [("https://madxrohitbihar-app.github.io/Test-Ranking/", 1, 1)]),
+            ("ALL STUDY PLATFORMS IN ONE PLACE", "All platforms hub", "", "Portals", 1, "HOT", [("https://code-x-studys.vercel.app/", 1, 1)]),
+            ("SOME IMPORTANT PLATFORM", "Important platform", "", "Portals", 0, "", [("https://heigenberg.vercel.app/", 1, 1)]),
+            ("PARMAR'S GK 5.0/4.0 TOPPERS", "Parmar GK toppers batches", "", "Study Apps", 0, "", [("https://madxrohitbihar-app.github.io/Parmar-/", 1, 1)]),
         ]
         for name, desc, logo, cat, feat, label, servers in cards:
             cur = c.execute("INSERT INTO app_cards(name,description,logo_url,category_id,featured,label,enabled,sort,created,updated) VALUES(?,?,?,?,1,?,1,?,?,?)",
@@ -77,12 +125,21 @@ def seed():
             for url, pri, dflt in servers:
                 c.execute("INSERT INTO app_servers(card_id,url,priority,is_default,enabled,maintenance) VALUES(?,?,?,?,1,0)",
                           (cid, url, pri, 1 if dflt else 0))
+        c.execute("UPDATE app_cards SET sort=(SELECT COUNT(*) FROM app_cards a2 WHERE a2.id<=app_cards.id)")
         c.execute("INSERT INTO announcements(title,body,level,created) VALUES(?,?,?,?)",
                   ("Welcome to NEXORA", "All study apps are now live. More portals coming soon.", "info", now()))
     for k, v in {"welcome_title": "Welcome to NEXORA", "welcome_sub": "ONE PLATFORM. MULTIPLE WEBSITES. UNLIMITED CONFIGURABILITY.",
                  "sections_featured": "1", "sections_popular": "1", "sections_recent": "1", "sections_trending": "1",
-                 "flag_ai_assistant": "0", "flag_downloads": "1", "flag_notifications": "1", "flag_browser_internal": "1"}.items():
+                 "flag_ai_assistant": "0", "flag_downloads": "1", "flag_notifications": "1", "flag_browser_internal": "1",
+                 "app_version_code": "4", "app_version_name": "1.3.0", "apk_url": "/nexora.apk",
+                 "release_notes": "41-cards catalog, in-app updates, faster app"}.items():
         c.execute("INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)", (k, v))
+
+def seed():
+    if os.environ.get("VERCEL"):
+        return
+    c = con(); c.executescript(SCHEMA)
+    _seed_core(c)
     c.commit(); c.close()
 
 seed()
@@ -165,6 +222,35 @@ def serviceworker():
     r.headers["Content-Type"] = "application/javascript"
     return r
 
+@app.get("/api/update")
+def api_update():
+    c = con()
+    def g(k):
+        r = c.execute("SELECT value FROM settings WHERE key=?", (k,)).fetchone()
+        return r["value"] if r else None
+    out = {"ok": True, "version_code": int(g("app_version_code") or 4), "version_name": g("app_version_name") or "1.3.0",
+           "apk_url": g("apk_url") or "/nexora.apk", "notes": g("release_notes") or ""}
+    c.close(); return jsonify(**out)
+
+@app.get("/nexora.apk")
+def serve_apk():
+    apk = os.path.join(os.path.dirname(__file__), "nexora.apk")
+    if not os.path.exists(apk):
+        return jsonify(error="apk_not_uploaded"), 404
+    r = make_response(open(apk, "rb").read())
+    r.headers["Content-Type"] = "application/vnd.android.package-archive"
+    r.headers["Content-Disposition"] = "attachment; filename=NEXORA.apk"
+    return r
+
+@app.get("/api/debug")
+def api_debug():
+    import hashlib as _h
+    try:
+        sha = _h.sha256(open(__file__, "rb").read()).hexdigest()[:12]
+    except Exception:
+        sha = "unknown"
+    return jsonify(ok=True, file_sha=sha, vercel=os.environ.get("VERCEL", "0"))
+
 @app.get("/api/version")
 def api_version():
     c = con(); v = c.execute("SELECT MAX(version) v FROM config_versions").fetchone()["v"] or 0; c.close()
@@ -184,8 +270,7 @@ def api_config():
 
 @app.get("/api/health")
 def api_health():
-    _mode = "supabase" if os.environ.get("SUPABASE_URL") else "local-ephemeral"
-    return jsonify(ok=True, service="NEXORA-API", time=int(now()), mode=_mode)
+    return jsonify(ok=True, service="NEXORA-API", time=int(now()))
 
 # ---------- admin auth ----------
 @app.post("/api/admin/login")
