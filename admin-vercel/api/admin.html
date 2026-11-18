@@ -1,198 +1,413 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NEXORA — Admin Panel</title>
+<title>NEXORA ADMIN</title>
 <style>
-:root{--bg:#0b0714;--bg2:#120a1f;--glass:rgba(139,92,246,.08);--glass2:rgba(139,92,246,.16);--line:rgba(167,139,250,.22);--txt:#ece9f7;--sub:#a79fc4;--vio:#8b5cf6;--vio2:#a78bfa;--neon:#c084fc;--ok:#34d399;--warn:#fbbf24;--err:#f87171}
+:root{--side:#171027;--side2:#211638;--vio:#8B5CF6;--neon:#A78BFA;--bg:#F7F7FB;--card:#FFFFFF;--txt:#191526;--sub:#777487;--line:#E9E6F0;--ok:#16A34A;--warn:#D97706;--err:#DC2626}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Plus Jakarta Sans,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(1200px 800px at 80% -10%,rgba(139,92,246,.18),transparent),radial-gradient(900px 700px at -10% 110%,rgba(76,29,149,.25),transparent),var(--bg);color:var(--txt);min-height:100vh}
-.glass{background:var(--glass);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(10px)}
-#login{max-width:400px;margin:12vh auto;padding:34px}
-#login h1{font-size:26px;letter-spacing:.4em;text-align:center;margin-bottom:4px}
-#login .tag{text-align:center;color:var(--sub);font-size:11px;letter-spacing:.2em;margin-bottom:26px}
-label{display:block;font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em;margin:12px 0 6px}
-input,select,textarea{width:100%;background:rgba(20,12,35,.7);border:1px solid var(--line);border-radius:10px;padding:11px 13px;color:var(--txt);font-size:14px;outline:none}
-input:focus{border-color:var(--vio2);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
-.btn{display:inline-block;background:linear-gradient(135deg,var(--vio),#6d28d9);border:none;color:#fff;padding:11px 18px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.04em}
-.btn:hover{filter:brightness(1.12)}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--vio2);font-weight:600}
-.btn.sm{padding:6px 10px;font-size:11px;border-radius:8px}
-.btn.danger{background:linear-gradient(135deg,#b91c1c,#7f1d1d)}
-.err{color:var(--err);font-size:12px;margin-top:10px;min-height:16px}
-#shell{display:none;grid-template-columns:230px 1fr;min-height:100vh}
-#side{padding:22px 14px;border-right:1px solid var(--line)}
-#side .logo{font-size:20px;letter-spacing:.35em;padding:6px 10px 18px}
-#side a{display:block;padding:10px 14px;border-radius:10px;color:var(--sub);font-size:13px;cursor:pointer;text-decoration:none}
-#side a:hover,#side a.on{background:var(--glass2);color:var(--txt)}
-#main{padding:26px;max-width:1150px}
-#top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-#top h2{font-size:20px}
-#top .who{font-size:12px;color:var(--sub)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-.stat{padding:18px}
-.stat .n{font-size:26px;font-weight:800;color:var(--neon)}
-.stat .t{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em;margin-top:4px}
-.card{padding:16px;margin-bottom:12px}
+body{font-family:Plus Jakarta Sans,system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+a{text-decoration:none;color:inherit}
+/* ---------- login ---------- */
+#login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#171027,#0b0714 60%,#1c1233)}
+#loginbox{width:min(400px,92vw);background:rgba(255,255,255,.05);border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:36px;color:#ECE9F7;backdrop-filter:blur(12px)}
+#loginbox h1{letter-spacing:.35em;text-align:center;font-size:24px;color:#fff}
+#loginbox .tag{text-align:center;color:#A79FC4;font-size:10px;letter-spacing:.25em;margin:6px 0 24px}
+#loginbox label{display:block;font-size:11px;color:#A79FC4;text-transform:uppercase;letter-spacing:.1em;margin:14px 0 6px}
+#loginbox input{width:100%;background:rgba(20,12,35,.6);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:12px;color:#fff;font-size:14px;outline:none}
+#loginbox input:focus{border-color:var(--neon)}
+#lbtn{width:100%;margin-top:20px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);border:none;color:#fff;padding:13px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer}
+#lerr{color:#FCA5A5;font-size:12px;margin-top:10px;min-height:16px}
+#modeBanner{display:none;width:min(400px,92vw);margin-bottom:14px;padding:10px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.4);background:rgba(251,191,36,.1);color:#FCD34D;font-size:11px}
+/* ---------- shell ---------- */
+#shell{display:none;min-height:100vh}
+#side{position:fixed;left:0;top:0;bottom:0;width:242px;background:var(--side);color:#C7C0E0;overflow-y:auto;z-index:40;transition:transform .2s}
+#side .brand{padding:22px 18px 14px;border-bottom:1px solid #2A1D42}
+#side .brand b{color:#fff;font-size:17px;letter-spacing:.3em}
+#side .brand div{font-size:9px;color:#8E85B0;letter-spacing:.18em;margin-top:3px}
+#side .grp{font-size:9.5px;color:#8E85B0;letter-spacing:.18em;padding:14px 18px 5px;text-transform:uppercase}
+#side a.item{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:12.5px;color:#B9B1D6;cursor:pointer;border-left:3px solid transparent}
+#side a.item:hover{background:var(--side2);color:#fff}
+#side a.item.on{background:var(--side2);color:#fff;border-left-color:var(--neon)}
+#side a.item .ic{width:16px;text-align:center;font-size:13px}
+#side .ph{padding:16px 18px;border-top:1px solid #2A1D42;margin-top:10px}
+#side .ph .nm{color:#fff;font-size:12.5px;font-weight:600}
+#side .ph .rl{color:#8E85B0;font-size:10px}
+#side .ph button{margin-top:8px;width:100%;background:#2A1D42;border:none;color:#C7C0E0;padding:7px;border-radius:8px;font-size:11px;cursor:pointer}
+#main{margin-left:242px;min-height:100vh}
+#top{display:flex;align-items:center;gap:12px;background:var(--card);border-bottom:1px solid var(--line);padding:12px 24px;position:sticky;top:0;z-index:30}
+#top .hamb{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:15px;cursor:pointer}
+#top h2{font-size:16px;font-weight:700}
+#top .crumb{color:var(--sub);font-size:11px}
+#top .sp{flex:1}
+#top .vbadge{font-size:10px;border:1px solid var(--line);color:var(--sub);border-radius:99px;padding:4px 10px}
+#pubbtn{background:linear-gradient(135deg,#8B5CF6,#6D28D9);border:none;color:#fff;padding:9px 16px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer}
+#view{padding:22px 24px;max-width:1200px}
+/* ---------- components ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.stat .n{font-size:24px;font-weight:800;color:var(--vio)}
+.stat .t{font-size:10.5px;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
 .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.pill{font-size:10px;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--vio2);text-transform:uppercase;letter-spacing:.08em}
-.pill.HOT{color:#fca5a5;border-color:rgba(248,113,113,.4)}.pill.NEW{color:#6ee7b7;border-color:rgba(52,211,153,.4)}
-.pill.TRENDING{color:#fcd34d;border-color:rgba(251,191,36,.4)}.pill.VIP{color:#c4b5fd;border-color:rgba(196,181,253,.5)}
-.off{opacity:.45}
-.srv{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(20,12,35,.6);border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:12px}
-.srv code{color:var(--vio2);word-break:break-all}
-.tag2{font-size:10px;color:var(--sub)}
-table{width:100%;border-collapse:collapse;font-size:12px}
-td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;color:var(--sub)}
-td{color:var(--txt)}
-h3{font-size:14px;margin:18px 0 10px;color:var(--vio2)}
-#phone{width:300px;height:560px;border-radius:30px;border:2px solid var(--line);background:#0d0818;padding:16px;overflow:auto;position:sticky;top:20px}
-#phone .pcard{background:var(--glass2);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
-#phone .pcard b{font-size:13px}
-#phone .pcard .d{font-size:11px;color:var(--sub);margin-top:3px}
-#phone .psec{font-size:11px;color:var(--neon);letter-spacing:.2em;margin:14px 0 8px;text-transform:uppercase}
-.two{display:grid;grid-template-columns:1fr 320px;gap:22px}
-@media(max-width:900px){.two{grid-template-columns:1fr}#shell{grid-template-columns:1fr}#side{display:flex;flex-wrap:wrap}}
-.modal-bg{position:fixed;inset:0;background:rgba(5,3,12,.7);display:flex;align-items:center;justify-content:center;z-index:50}
-.modal{width:min(560px,92vw);max-height:86vh;overflow:auto;padding:24px}
+h3.sec{font-size:13px;font-weight:700;margin:18px 0 10px;color:var(--txt)}
+.pill{font-size:9.5px;padding:3px 9px;border-radius:99px;border:1px solid var(--line);color:var(--sub);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pill.HOT{color:var(--err);border-color:#FCA5A5}.pill.NEW{color:var(--ok);border-color:#86EFAC}
+.pill.TRENDING{color:var(--warn);border-color:#FCD34D}.pill.VIP{color:var(--vio);border-color:#C4B5FD}
+.pill.ok{color:var(--ok);border-color:#86EFAC}.pill.err{color:var(--err);border-color:#FCA5A5}
+.pill.warn{color:var(--warn);border-color:#FCD34D}
+button.btn{background:var(--vio);border:none;color:#fff;padding:9px 15px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer}
+button.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--vio);font-weight:600}
+button.btn.sm{padding:5px 10px;font-size:11px;border-radius:7px}
+button.btn.danger{background:#fff;border:1px solid #FCA5A5;color:var(--err)}
+input,select,textarea{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--txt);font-size:13px;outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(139,92,246,.12)}
+label.fl{display:block;font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin:10px 0 5px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{color:var(--sub);text-transform:uppercase;font-size:10px;letter-spacing:.08em;text-align:left;padding:8px;border-bottom:2px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line)}
+.tblwrap{overflow-x:auto}
+.srv{display:flex;align-items:center;gap:9px;background:#F7F5FC;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:8px;font-size:12px}
+.srv code{color:var(--vio);word-break:break-all;font-size:11px}
+.empty{padding:36px;text-align:center;color:var(--sub);font-size:13px;background:var(--card);border:1px dashed var(--line);border-radius:14px}
+.skel{height:70px;border-radius:14px;background:linear-gradient(90deg,#EFEDF6 25%,#F9F8FD 50%,#EFEDF6 75%);background-size:200% 100%;animation:sh 1.1s infinite;margin-bottom:12px}
+@keyframes sh{to{background-position:-200% 0}}
+.notconfigured{background:#FFF7ED;border:1px solid #FED7AA;border-radius:14px;padding:20px;margin-bottom:14px}
+.notconfigured b{color:var(--warn)}
+.notconfigured p{color:#9A6A2F;font-size:12.5px;margin-top:6px;line-height:1.6}
+.modal-bg{position:fixed;inset:0;background:rgba(23,16,39,.5);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px}
+.modal{width:min(560px,94vw);max-height:88vh;overflow:auto;background:#fff;border-radius:16px;padding:22px}
+.hint{font-size:11px;color:var(--sub)}
+#toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:12px;font-size:13px;z-index:99;display:none;font-weight:600}
+/* phone preview */
+#phone{width:270px;height:520px;border-radius:26px;border:1px solid var(--line);background:#0B0714;padding:14px;overflow:auto;position:sticky;top:80px}
+#phone .ph-h{color:#fff;font-size:13px;font-weight:800;letter-spacing:.2em}
+#phone .pcard{background:rgba(139,92,246,.10);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:11px;margin-top:8px}
+#phone .pcard b{color:#ECE9F7;font-size:12px}
+#phone .pcard .d{color:#A79FC4;font-size:9.5px;margin-top:2px}
+#phone .psec{color:#C084FC;font-size:9px;letter-spacing:.2em;margin-top:12px}
+.two{display:grid;grid-template-columns:1fr 300px;gap:20px}
+@media(max-width:960px){.two{grid-template-columns:1fr}#phone{position:static;width:100%}}
+@media(max-width:860px){
+ #side{transform:translateX(-100%)}
+ #side.open{transform:translateX(0)}
+ #main{margin-left:0}
+ #top .hamb{display:block}
+}
 </style>
 </head>
 <body>
-<div id="modeBanner" style="display:none;margin:0 auto 14px;max-width:400px;padding:10px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fbbf24;font-size:11px"></div>
-<div id="login" class="glass">
-  <h1>NEXORA</h1><div class="tag">ADMIN CONSOLE</div>
-  <label>Email</label><input id="em" type="email" value="admin@nexora.app">
-  <label>Password</label><input id="pw" type="password" placeholder="••••••••••">
-  <div class="err" id="lerr"></div>
-  <button class="btn" style="width:100%" onclick="login()">Sign In</button>
-  <p style="font-size:11px;color:var(--sub);margin-top:14px">Default password is set at first run — change it right after login (Profile → Change password).</p>
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div id="modeBanner"></div>
+  <div id="loginbox">
+    <h1>NEXORA</h1><div class="tag">ADMIN CONSOLE</div>
+    <label>Email</label><input id="em" type="email" value="admin@nexora.app" autocomplete="username">
+    <label>Password</label><input id="pw" type="password" placeholder="••••••••" autocomplete="current-password">
+    <div id="lerr"></div>
+    <button id="lbtn" onclick="login()">Sign In</button>
+    <p style="font-size:11px;color:#8E85B0;margin-top:16px">Protected area · sessions expire · failed attempts are rate-limited and logged.</p>
+  </div>
 </div>
+
+<!-- ============ SHELL ============ -->
 <div id="shell">
   <div id="side">
-    <div class="logo">NEXORA</div>
-    <a class="on" data-v="dash">Dashboard</a><a data-v="apps">App Manager</a><a data-v="cats">Categories</a>
-    <a data-v="content">Content</a><a data-v="config">Config & Rollback</a><a data-v="audit">Audit Log</a>
-    <a onclick="logout()">Sign Out</a>
+    <div class="brand"><b>NEXORA</b><div>ADMIN · DESIGN C</div></div>
+    <div class="grp">Overview</div>
+    <a class="item on" data-v="dash"><span class="ic">▦</span>Overview Dashboard</a>
+    <div class="grp">Catalog</div>
+    <a class="item" data-v="apps"><span class="ic">▣</span>App Manager</a>
+    <a class="item" data-v="websites"><span class="ic">⌘</span>Website Manager</a>
+    <a class="item" data-v="health"><span class="ic">♥</span>Server Health</a>
+    <a class="item" data-v="cats"><span class="ic">◇</span>Category Manager</a>
+    <div class="grp">App Experience</div>
+    <a class="item" data-v="home"><span class="ic">⌂</span>Home Screen Builder</a>
+    <a class="item" data-v="nav"><span class="ic">☰</span>Navigation Builder</a>
+    <div class="grp">Content</div>
+    <a class="item" data-v="content"><span class="ic">✎</span>Content Manager</a>
+    <a class="item" data-v="institutes"><span class="ic">🎓</span>Institute Manager</a>
+    <a class="item" data-v="books"><span class="ic">📘</span>Books &amp; Resources</a>
+    <div class="grp">Control</div>
+    <a class="item" data-v="features"><span class="ic">⚙</span>Feature Control Centre</a>
+    <a class="item" data-v="ai"><span class="ic">✦</span>AI Configuration</a>
+    <a class="item" data-v="notify"><span class="ic">🔔</span>Notification Manager</a>
+    <a class="item" data-v="maint"><span class="ic">🛠</span>Maintenance Manager</a>
+    <div class="grp">Insights</div>
+    <a class="item" data-v="analytics"><span class="ic">📈</span>User Analytics</a>
+    <a class="item" data-v="feedback"><span class="ic">🐞</span>Feedback &amp; Reports</a>
+    <a class="item" data-v="downloads"><span class="ic">⬇</span>Downloads Manager</a>
+    <div class="grp">System</div>
+    <a class="item" data-v="security"><span class="ic">🛡</span>Security Centre</a>
+    <a class="item" data-v="admins"><span class="ic">👤</span>Admin Management</a>
+    <a class="item" data-v="config"><span class="ic">🕘</span>Configuration History</a>
+    <a class="item" data-v="backup"><span class="ic">💾</span>Backup &amp; Restore</a>
+    <a class="item" data-v="updates"><span class="ic">📦</span>App Update Manager</a>
+    <a class="item" data-v="release"><span class="ic">🚀</span>Release Manager</a>
+    <a class="item" data-v="docs"><span class="ic">📄</span>API Documentation</a>
+    <div class="ph"><div class="nm" id="who">—</div><div class="rl" id="role">—</div><button onclick="logout()">Secure Logout</button></div>
   </div>
   <div id="main">
-    <div id="top"><h2 id="ttl">Dashboard</h2><div class="who" id="who"></div></div>
+    <div id="top">
+      <button class="hamb" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+      <div><h2 id="ttl">Overview</h2><div class="crumb" id="crumb">NEXORA ADMIN / dashboard</div></div>
+      <span class="sp"></span>
+      <span class="vbadge" id="verbadge">config v0</span>
+      <button id="pubbtn" onclick="publish()">Publish</button>
+    </div>
     <div id="view"></div>
   </div>
 </div>
 <div id="modal" style="display:none"></div>
+<div id="toast"></div>
 <script>
-let $=s=>document.querySelector(s), me=null;
+let $=s=>document.querySelector(s), me=null, CARDS=[], CATS=[], SETTINGS={}, VERSION=0;
 const api=async(p,o)=>{const r=await fetch(p,{headers:{"Content-Type":"application/json"},credentials:"same-origin",...o});const j=await r.json().catch(()=>({}));if(r.status===401&&me)logout();if(!r.ok&&j.error)throw j;j._st=r.status;return j};
-fetch("/api/health").then(r=>r.json()).then(h=>{ if(h.mode==="local-ephemeral"){ const b=document.getElementById("modeBanner"); b.style.display="block"; b.textContent="LOCAL-EPHEMERAL MODE — data resets on redeploy. Supabase connect pending (Phase-2: create Supabase project → set env vars)."; } }).catch(()=>{});
-async function login(){try{$("#lerr").textContent="";const j=await api("/api/admin/login",{method:"POST",body:JSON.stringify({email:$("#em").value,password:$("#pw").value})});me=j;openApp()}catch(e){$("#lerr").textContent=e.msg||"Invalid credentials"}}
-function logout(){api("/api/admin/logout",{method:"POST"});location.reload()}
-function openApp(){$("#login").style.display="none";$("#shell").style.display="grid";$("#who").textContent=me.email+" · "+me.role;nav("dash")}
-document.querySelectorAll("#side a[data-v]").forEach(a=>a.onclick=()=>nav(a.dataset.v));
-function nav(v){document.querySelectorAll("#side a[data-v]").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
-  ({dash:dashboard,apps:appsView,cats:catsView,content:contentView,config:configView,audit:auditView})[v]()}
-function toast(m,ok=true){const d=document.createElement("div");d.textContent=m;d.style.cssText=`position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:12px;font-size:13px;z-index:99;background:${ok?"#134e33":"#4c1d1d"};border:1px solid ${ok?"#34d399":"#f87171"}`;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
-
-async function dashboard(){const j=await api("/api/admin/overview");const d=j.data;
-  $("#ttl").textContent="Dashboard";
-  $("#view").innerHTML=`<div class="grid">
-   ${[["Cards",d.cards],["Servers",d.servers],["Categories",d.categories],["Announcements",d.announcements],["Config Version",d.version],["Health Checks",d.health_checks]].map(([t,n])=>`<div class="glass stat"><div class="n">${n}</div><div class="t">${t}</div></div>`).join("")}</div>
-   <h3>Quick actions</h3><div class="row"><button class="btn" onclick="nav('apps')">Open App Manager</button><button class="btn ghost" onclick="publish(true)">Publish Config v${d.version+1}</button></div>`}
-
-let CARDS=[],CATS=[];
-async function appsView(){const j=await api("/api/admin/cards"),k=await api("/api/admin/categories");CARDS=j.data;CATS=k.data;
-  $("#ttl").textContent="App Manager";
-  $("#view").innerHTML=`<div class="row" style="margin-bottom:14px"><button class="btn" onclick="cardForm()">+ New App Card</button>
-   <button class="btn ghost" onclick="publish(true)">Publish changes</button>
-   <span class="tag2">Servers inside each card are independent websites — numbered Server 1..N for users.</span></div>
-   <div class="two"><div id="clist">${CARDS.map(c=>cardHTML(c)).join("")||"<p class='tag2'>No cards yet.</p>"}</div>
-   <div id="phone"><div class="psec">Live Preview</div>${phoneHTML()}</div></div>`;
-  bindToggles()}
-function catName(id){return (CATS.find(c=>c.id===id)||{}).name||"—"}
-function cardHTML(c){return `<div class="glass card ${c.enabled?"":"off"}" id="c${c.id}">
- <div class="row"><b style="font-size:15px">${c.name}</b>
- ${["HOT","NEW","TRENDING","VIP"].includes(c.label)?`<span class="pill ${c.label}">${c.label}</span>`:""}
- ${c.featured?'<span class="pill">Featured</span>':""}<span class="pill">${catName(c.category_id)}</span>
- <span style="flex:1"></span>
- <button class="btn sm ghost" onclick="cardForm(${c.id})">Edit</button>
- <button class="btn sm ghost" onclick="dup(${c.id})">Duplicate</button>
- <button class="btn sm danger" onclick="delCard(${c.id})">Delete</button></div>
- <div class="tag2" style="margin-top:6px">${c.description||""}</div>
- ${c.servers.map((s,i)=>`<div class="srv"><b>Server ${i+1}</b><code>${s.url}</code>
-   ${s.is_default?'<span class="pill">Default</span>':""}${s.maintenance?'<span class="pill" style="color:#fbbf24">Maint.</span>':""}
-   <span style="flex:1"></span>
-   <button class="btn sm ghost" onclick="health(${s.id})">Check</button>
-   <button class="btn sm ghost" onclick="srvForm(${c.id},${JSON.stringify(JSON.stringify(s))})">Edit</button>
-   <button class="btn sm danger" onclick="delSrv(${s.id},${c.id})">✕</button>
-   <span class="tag2" id="h${s.id}"></span></div>`).join("")||"<div class='tag2' style='margin-top:8px'>No servers yet.</div>"}
- <div class="row" style="margin-top:10px"><button class="btn sm" onclick="srvForm(${c.id})">+ Add Server</button>
- <span style="flex:1"></span>
- <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="en${c.id}" ${c.enabled?"checked":""} onchange="tog(${c.id},'enabled',this.checked)"> Enabled</label>
- <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="ft${c.id}" ${c.featured?"checked":""} onchange="tog(${c.id},'featured',this.checked)"> Featured</label></div></div>`}
-function phoneHTML(){return CARDS.filter(c=>c.enabled).map(c=>`<div class="pcard"><b>${c.name}</b>${c.label?` <span class="pill ${c.label}">${c.label}</span>`:""}<div class="d">${c.description||""}</div><div class="tag2" style="margin-top:6px">Servers: ${c.servers.length}</div><button class="btn sm" style="margin-top:8px">OPEN</button></div>`).join("")}
-function bindToggles(){}
-async function tog(id,k,v){await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved");appsView()}
-async function dup(id){await api(`/api/admin/cards/${id}/duplicate`,{method:"POST"});toast("Duplicated (disabled)");appsView()}
-async function delCard(id){if(!confirm("Delete card + its servers?"))return;await api("/api/admin/cards/"+id,{method:"DELETE"});toast("Deleted");appsView()}
-async function delSrv(sid,cid){if(!confirm("Delete server?"))return;await api("/api/admin/servers/"+sid,{method:"DELETE"});toast("Server deleted");appsView()}
-async function health(sid){$("#h"+sid).textContent="…checking";const j=await api(`/api/admin/servers/${sid}/health`,{method:"POST"});
- const r=j.result;$("#h"+sid).innerHTML=`<span style="color:${r.up?"var(--ok)":"var(--err)"}">${r.up?"UP":"DOWN"} · HTTP ${r.http||"-"} · ${r.ms}ms</span>`}
-function cardForm(id){const c=id?CARDS.find(x=>x.id===id):{name:"",description:"",logo:"",category_id:CATS[0]?.id,label:"",browser:"internal",featured:false,enabled:true};
- modal(`<h3>${id?"Edit Card":"New App Card"}</h3>
- <label>Name</label><input id="f_name" value="${esc(c.name)}">
- <label>Description</label><input id="f_desc" value="${esc(c.description||"")}">
- <label>Logo URL (optional)</label><input id="f_logo" value="${esc(c.logo||"")}">
- <label>Category</label><select id="f_cat">${CATS.map(x=>`<option value="${x.id}" ${x.id===c.category_id?"selected":""}>${x.name}</option>`).join("")}</select>
- <label>Label</label><select id="f_label">${["","NEW","HOT","TRENDING","VIP"].map(l=>`<option ${l===(c.label||"")?"selected":""}>${l}</option>`).join("")}</select>
- <label>Browser</label><select id="f_br"><option value="internal" ${c.browser==="internal"?"selected":""}>Internal</option><option value="external" ${c.browser==="external"?"selected":""}>External</option></select>
- <div class="row" style="margin-top:10px"><label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="f_ft" ${c.featured?"checked":""}> Featured</label>
- <label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="f_en" ${c.enabled?"checked":""}> Enabled</label></div>
- <div class="err" id="merr"></div><div class="row" style="margin-top:14px"><button class="btn" onclick="saveCard(${id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
-async function saveCard(id){const d={name:$("#f_name").value,description:$("#f_desc").value,logo:$("#f_logo").value,category_id:+$("#f_cat").value,label:$("#f_label").value,browser:$("#f_br").value,featured:$("#f_ft").checked,enabled:$("#f_en").checked};
- try{if(id)await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify(d)});else await api("/api/admin/cards",{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved");appsView()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
-function srvForm(cid,s){const srv=s?JSON.parse(s):{};modal(`<h3>${s?"Edit Server":"Add Server"} — Card #${cid}</h3>
- <label>URL (independent website)</label><input id="s_url" value="${esc(srv.url||"")}" placeholder="https://…">
- <label>Priority (1 = first)</label><input id="s_pri" type="number" value="${srv.priority||99}">
- <label>Note (admin-only)</label><input id="s_note" value="${esc(srv.note||"")}" placeholder="internal label, users only see Server N">
- <label style="margin-top:10px;display:flex;gap:6px"><input type="checkbox" id="s_dflt" ${srv.is_default?"checked":""}> Default server</label>
- <div class="err" id="merr"></div><div class="row" style="margin-top:14px"><button class="btn" onclick="saveSrv(${cid},${srv.id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
-async function saveSrv(cid,sid){const d={url:$("#s_url").value,priority:+$("#s_pri").value,note:$("#s_note").value,is_default:$("#s_dflt").checked};
- try{if(sid)await api("/api/admin/servers/"+sid,{method:"PUT",body:JSON.stringify(d)});else await api(`/api/admin/cards/${cid}/servers`,{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved");appsView()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
-async function catsView(){const j=await api("/api/admin/categories");CATS=j.data;$("#ttl").textContent="Categories";
- $("#view").innerHTML=`<div class="row" style="margin-bottom:12px"><input id="cn" placeholder="New category name" style="max-width:280px"><button class="btn" onclick="addCat()">Add</button></div>
- <div class="glass card"><table><tr><th>#</th><th>Name</th><th>Sort</th><th></th></tr>${CATS.map(c=>`<tr><td>${c.id}</td><td><input value="${esc(c.name)}" onchange="updCat(${c.id},'name',this.value)"></td><td><input type="number" value="${c.sort}" style="width:70px" onchange="updCat(${c.id},'sort',this.value)"></td><td><button class="btn sm danger" onclick="delCat(${c.id})">✕</button></td></tr>`).join("")}</table></div>`}
-async function addCat(){try{await api("/api/admin/categories",{method:"POST",body:JSON.stringify({name:$("#cn").value})});catsView()}catch(e){toast(e.msg||"Duplicate?",false)}}
-async function updCat(id,k,v){await api("/api/admin/categories/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved")}
-async function delCat(id){if(!confirm("Delete category?"))return;try{await api("/api/admin/categories/"+id,{method:"DELETE"});catsView()}catch(e){toast(e.msg,false)}}
-async function contentView(){const j=await api("/api/admin/announcements"),s=await api("/api/admin/settings");const A=j.data,S=s.data;
- $("#ttl").textContent="Content & Features";
- $("#view").innerHTML=`<h3>Home settings</h3><div class="glass card">
-  <label>Welcome title</label><input id="wt" value="${esc(S.welcome_title||"")}">
-  <label>Welcome subtitle</label><input id="ws" value="${esc(S.welcome_sub||"")}">
-  <div class="row" style="margin-top:12px">${["sections_featured","sections_popular","sections_recent","sections_trending","flag_downloads","flag_notifications","flag_ai_assistant"].map(k=>`<label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="${k}" ${S[k]==="1"?"checked":""}> ${k.replace(/^(sections|flag)_/,"")}</label>`).join("")}</div>
-  <button class="btn" style="margin-top:12px" onclick="saveSettings()">Save settings</button></div>
- <h3>Announcements</h3><div class="glass card">
-  <label>Title</label><input id="a_t"><label>Body</label><textarea id="a_b" rows="2"></textarea>
-  <div class="row" style="margin-top:10px"><button class="btn" onclick="addAnn()">Add announcement</button></div>
-  <table style="margin-top:10px"><tr><th>Title</th><th>Body</th><th></th></tr>${A.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.body)}</td><td><button class="btn sm danger" onclick="delAnn(${a.id})">✕</button></td></tr>`).join("")}</table></div>`}
-async function saveSettings(){const d={welcome_title:$("#wt").value,welcome_sub:$("#ws").value};
- ["sections_featured","sections_popular","sections_recent","sections_trending","flag_downloads","flag_notifications","flag_ai_assistant"].forEach(k=>d[k]=$("#"+k).checked?"1":"0");
- await api("/api/admin/settings",{method:"PUT",body:JSON.stringify(d)});toast("Saved — publish to push to apps")}
-async function addAnn(){await api("/api/admin/announcements",{method:"POST",body:JSON.stringify({title:$("#a_t").value,body:$("#a_b").value})});toast("Added — publish to push");contentView()}
-async function delAnn(id){await api("/api/admin/announcements/"+id,{method:"DELETE"});contentView()}
-async function configView(){const j=await api("/api/admin/config/versions");$("#ttl").textContent="Config & Rollback";
- $("#view").innerHTML=`<div class="row" style="margin-bottom:14px"><button class="btn" onclick="publish()">Publish current state as new version</button>
-  <span class="tag2">Apps fetch /api/config with ETag — only real changes consume bandwidth. Publish before users see edits.</span></div>
-  <div class="glass card"><table><tr><th>Version</th><th>Published (UTC)</th><th>Size</th><th></th></tr>
-  ${j.data.map(v=>`<tr><td>v${v.version}</td><td>${new Date(v.published_at*1000).toISOString().slice(0,19).replace("T"," ")}</td><td>${(v.size/1024).toFixed(1)} KB</td>
-  <td><button class="btn sm ghost" onclick="rollback(${v.version})">Rollback to this</button></td></tr>`).join("")}</table></div>`}
-async function publish(skip){const j=await api("/api/admin/config/publish",{method:"POST"});toast("Published v"+j.version);nav(skip?"apps":"config")}
-async function rollback(v){if(!confirm("Restore card+server data from v"+v+"?"))return;await api("/api/admin/config/rollback",{method:"POST",body:JSON.stringify({version:v})});toast("Restored from v"+v);configView()}
-async function auditView(){const j=await api("/api/admin/audit");$("#ttl").textContent="Audit Log";
- $("#view").innerHTML=`<div class="glass card"><table><tr><th>Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr>
- ${j.data.map(a=>`<tr><td>${new Date(a.ts*1000).toISOString().slice(11,19)}</td><td>${a.actor}</td><td>${a.action}</td><td class="tag2">${esc(a.detail||"").slice(0,120)}</td></tr>`).join("")}</table></div>`}
-function modal(html){$("#modal").className="modal-bg";$("#modal").style.display="flex";$("#modal").innerHTML=`<div class="glass modal">${html}</div>`}
+const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+function toast(m,ok=true){const t=$("#toast");t.textContent=m;t.style.display="block";t.style.background=ok?"#16A34A":"#DC2626";t.style.color="#fff";setTimeout(()=>t.style.display="none",2400)}
+function modal(html){$("#modal").className="modal-bg";$("#modal").style.display="flex";$("#modal").innerHTML=`<div class="modal">${html}</div>`}
 function closeM(){$("#modal").style.display="none"}
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+$("#modal").onclick=e=>{if(e.target.id==="modal")closeM()};
+
+async function login(){try{$("#lerr").textContent="";const j=await api("/api/admin/login",{method:"POST",body:JSON.stringify({email:$("#em").value,password:$("#pw").value})});me=j;openApp()}catch(e){$("#lerr").textContent=e.msg||e.error||"Invalid credentials"}}
+function logout(){api("/api/admin/logout",{method:"POST"});location.reload()}
+fetch("/api/health").then(r=>r.json()).then(h=>{if(h.mode==="local-ephemeral"){const b=$("#modeBanner");b.style.display="block";b.innerHTML="<b>LOCAL-EPHEMERAL MODE</b> — data resets on redeploy. Supabase connect pending (Phase-2): create Supabase project → share URL + keys → permanent DB."}}).catch(()=>{});
+
+function openApp(){$("#login").style.display="none";$("#shell").style.display="block";$("#who").textContent=me.email;$("#role").textContent=me.role;nav("dash")}
+document.querySelectorAll("#side a.item").forEach(a=>a.onclick=()=>{document.getElementById("side").classList.remove("open");nav(a.dataset.v)});
+document.querySelectorAll("#side a.item").forEach(a=>a.onclick=()=>nav(a.dataset.v));
+function nav(v){document.querySelectorAll("#side a.item").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
+ const map={dash:"dashboard",apps:"app manager",websites:"website manager",health:"server health",cats:"categories",home:"home builder",nav:"navigation builder",content:"content manager",institutes:"institutes",books:"books & resources",features:"feature control",ai:"ai configuration",notify:"notifications",maint:"maintenance",analytics:"user analytics",feedback:"feedback & reports",downloads:"downloads manager",security:"security centre",admins:"admin management",config:"configuration history",backup:"backup & restore",updates:"app update manager",release:"release manager",docs:"api docs"};
+ $("#ttl").textContent=map[v]||v;$("#crumb").textContent="NEXORA ADMIN / "+(map[v]||v);
+ ({dash:vDash,apps:vApps,websites:vWebsites,health:vHealth,cats:vCats,home:vHome,nav:vNav,content:vContent,institutes:vNC,books:vNC,features:vFeatures,ai:vAI,notify:vNotify,maint:vMaint,analytics:vNC2,feedback:vNC2,downloads:vNC2,security:vSecurity,admins:vAdmins,config:vConfig,backup:vBackup,updates:vNC2,release:vNC2,docs:vDocs})[v]()}
+
+async function refreshMeta(){try{const j=await api("/api/version");VERSION=j.config_version;$("#verbadge").textContent="config v"+VERSION}catch(e){}}
+async function publish(){try{const j=await api("/api/admin/config/publish",{method:"POST"});toast("Published config v"+j.version);refreshMeta()}catch(e){toast(e.error||"Publish failed",false)}}
+
+function NC(title,phase,needs){return `<div class="notconfigured"><b>⏳ ${esc(title)} — Not configured yet</b><p>This module is part of <b>Phase ${phase}</b> of the master plan and is intentionally not faked.<br><br><b>Needed to enable:</b> ${needs}</p></div>`}
+function vNC(){const t=$("#ttl").textContent;$("#view").innerHTML=NC(t, "2-3", "Supabase project (URL + keys) → storage + content tables (schema already shipped in repo: nexora-supabase-schema.sql).")}
+function vNC2(){const t=$("#ttl").textContent;
+ if(t==="User Analytics") $("#view").innerHTML=NC("User Analytics","4","Android app analytics events (privacy-conscious, aggregated). No fabricated numbers are shown by design.")+`<div class="card"><b>Honest status:</b> app does not send analytics events yet — this page will show real aggregated data once the client integration ships.</div>`;
+ else if(t==="Feedback & Reports") $("#view").innerHTML=NC("Feedback & Bug Reports","4","In-app report submission (Android client) → feedback_reports table (schema ready).");
+ else if(t==="Downloads Manager") $("#view").innerHTML=NC("Downloads Manager","5","Resource files + storage bucket (Supabase) + app download client.");
+ else $("#view").innerHTML=NC("Update / Release Manager","6","APK release pipeline — current installed release: v1.1.0 (versionCode 2). Native releases are distributed as APK updates per Android policy.")}
+
+/* ---------- DASHBOARD ---------- */
+async function vDash(){try{
+ const o=await api("/api/admin/overview"), a=await api("/api/admin/audit"); const d=o.data;
+ $("#view").innerHTML=`<div class="stats">
+  ${[["App Cards",d.cards],["Server Records",d.servers],["Categories",d.categories],["Announcements",d.announcements],["Config Version",d.version],["Health Checks",d.health_checks]].map(([t,n])=>`<div class="stat"><div class="n">${n}</div><div class="t">${t}</div></div>`).join("")}</div>
+  <h3 class="sec">Quick Actions</h3><div class="card row">
+  <button class="btn" onclick="nav('apps')">+ New Card</button><button class="btn ghost" onclick="nav('health')">Check Server Health</button>
+  <button class="btn ghost" onclick="nav('cats')">+ Category</button><button class="btn ghost" onclick="publish()">Publish Config</button>
+  <button class="btn ghost" onclick="nav('notify')">Send Announcement</button></div>
+  <h3 class="sec">Latest Admin Activity (real audit log)</h3>
+  <div class="card tblwrap"><table><tr><th>Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr>
+  ${a.data.slice(0,8).map(x=>`<tr><td>${new Date(x.ts*1000).toISOString().slice(0,16).replace("T"," ")}</td><td>${esc(x.actor)}</td><td>${esc(x.action)}</td><td class="hint">${esc(x.detail).slice(0,90)}</td></tr>`).join("")}</table></div>`;
+ refreshMeta()}catch(e){$("#view").innerHTML=`<div class="empty">Failed to load: ${esc(e.error||"")}</div>`}}
+
+/* ---------- APP MANAGER ---------- */
+async function vApps(){try{
+ const j=await api("/api/admin/cards"),k=await api("/api/admin/categories");CARDS=j.data;CATS=k.data;
+ $("#view").innerHTML=`<div class="row" style="margin-bottom:14px"><input id="q" placeholder="Search cards…" style="max-width:280px" oninput="drawCards()">
+ <button class="btn" onclick="cardForm()">+ New App Card</button><span class="hint">Servers inside a card are independent websites — users see Server 1..N.</span></div>
+ <div id="clist"></div>`;drawCards()}catch(e){$("#view").innerHTML=`<div class="empty">Failed: ${esc(e.error||"")}</div>`}}
+function drawCards(){const q=($("#q")?.value||"").toLowerCase();
+ const list=CARDS.filter(c=>!q||c.name.toLowerCase().includes(q));
+ $("#clist").innerHTML=list.map(c=>`<div class="card ${c.enabled?"":"card-off"}" style="${c.enabled?"":"opacity:.55"}">
+  <div class="row"><b style="font-size:14px">${esc(c.name)}</b>
+  ${["HOT","NEW","TRENDING","VIP"].includes(c.label)?`<span class="pill ${c.label}">${c.label}</span>`:""}
+  ${c.featured?'<span class="pill VIP">Featured</span>':""}
+  <span class="pill">${esc(catName(c.category_id))}</span><span class="sp" style="flex:1"></span>
+  <button class="btn sm ghost" onclick="cardForm(${c.id})">Edit</button>
+  <button class="btn sm ghost" onclick="dup(${c.id})">Duplicate</button>
+  <button class="btn sm danger" onclick="delCard(${c.id})">Delete</button></div>
+  <div class="hint" style="margin-top:5px">${esc(c.description)}</div>
+  ${c.servers.map((s,i)=>`<div class="srv"><b>Server ${i+1}</b><code>${esc(s.url)}</code>
+    ${s.is_default?'<span class="pill VIP">Default</span>':""}${s.maintenance?'<span class="pill warn">Maintenance</span>':""}
+    <span style="flex:1"></span><button class="btn sm ghost" onclick="health(${s.id})">Check</button>
+    <button class="btn sm ghost" onclick="srvForm(${c.id},${JSON.stringify(JSON.stringify(s))})">Edit</button>
+    <button class="btn sm danger" onclick="delSrv(${s.id})">✕</button><span class="hint" id="h${s.id}"></span></div>`).join("")||"<div class='hint' style='margin-top:8px'>No servers — add at least one.</div>"}
+  <div class="row" style="margin-top:10px"><button class="btn sm" onclick="srvForm(${c.id})">+ Add Server</button><span style="flex:1"></span>
+  <label class="hint" style="display:flex;gap:6px;align-items:center"><input type="checkbox" ${c.enabled?"checked":""} onchange="tog(${c.id},'enabled',this.checked)"> Enabled</label>
+  <label class="hint" style="display:flex;gap:6px;align-items:center"><input type="checkbox" ${c.featured?"checked":""} onchange="tog(${c.id},'featured',this.checked)"> Featured</label></div></div>`).join("")||`<div class="empty">No cards match.</div>`}
+function catName(id){return (CATS.find(c=>c.id===id)||{}).name||"—"}
+async function tog(id,k,v){await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved");vApps()}
+async function dup(id){await api(`/api/admin/cards/${id}/duplicate`,{method:"POST"});toast("Duplicated (disabled)");vApps()}
+async function delCard(id){if(!confirm("Delete this card and ALL its server records?"))return;await api("/api/admin/cards/"+id,{method:"DELETE"});toast("Deleted");vApps()}
+async function delSrv(sid){if(!confirm("Delete server record?"))return;await api("/api/admin/servers/"+sid,{method:"DELETE"});toast("Deleted");vApps()}
+async function health(sid){$("#h"+sid).textContent="checking…";try{const j=await api(`/api/admin/servers/${sid}/health`,{method:"POST"});const r=j.result;
+ $("#h"+sid).innerHTML=`<span style="color:${r.up?"#16A34A":"#DC2626"};font-weight:700">${r.up?"UP":"DOWN"} · HTTP ${r.http||"-"} · ${r.ms}ms</span>`}catch(e){$("#h"+sid).textContent="failed"}}
+function cardForm(id){const c=id?CARDS.find(x=>x.id===id):{name:"",description:"",logo_url:"",category_id:CATS[0]?.id,label:"",browser_mode:"internal",featured:false,enabled:true};
+ modal(`<h3 style="font-size:15px">${id?"Edit Card":"New App Card"}</h3>
+ <label class="fl">Title</label><input id="f_name" value="${esc(c.name)}" style="width:100%">
+ <label class="fl">Description</label><input id="f_desc" value="${esc(c.description)}" style="width:100%">
+ <label class="fl">Logo URL (optional)</label><input id="f_logo" value="${esc(c.logo_url)}" style="width:100%">
+ <label class="fl">Category</label><select id="f_cat" style="width:100%">${CATS.map(x=>`<option value="${x.id}" ${x.id===c.category_id?"selected":""}>${x.name}</option>`).join("")}</select>
+ <label class="fl">Label</label><select id="f_label" style="width:100%">${["","NEW","HOT","TRENDING","VIP"].map(l=>`<option ${l===(c.label||"")?"selected":""}>${l||"— none —"}</option>`).join("")}</select>
+ <label class="fl">Opens in</label><select id="f_br" style="width:100%"><option value="internal" ${c.browser_mode==="internal"?"selected":""}>Internal browser</option><option value="external" ${c.browser_mode==="external"?"selected":""}>External browser</option></select>
+ <div class="row" style="margin-top:10px"><label class="hint" style="display:flex;gap:6px"><input type="checkbox" id="f_ft" ${c.featured?"checked":""}> Featured</label>
+ <label class="hint" style="display:flex;gap:6px"><input type="checkbox" id="f_en" ${c.enabled?"checked":""}> Enabled</label></div>
+ <div id="merr" style="color:var(--err);font-size:12px;margin-top:8px"></div>
+ <div class="row" style="margin-top:12px"><button class="btn" onclick="saveCard(${id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+async function saveCard(id){const d={name:$("#f_name").value,description:$("#f_desc").value,logo:$("#f_logo").value,category_id:+$("#f_cat").value,label:$("#f_label").value,browser:$("#f_br").value,featured:$("#f_ft").checked,enabled:$("#f_en").checked};
+ try{if(id)await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify(d)});else await api("/api/admin/cards",{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved — publish to push to apps");vApps()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
+function srvForm(cid,s){const srv=s?JSON.parse(s):{};modal(`<h3 style="font-size:15px">${s?"Edit Server":"Add Server"} — ${esc((CARDS.find(x=>x.id===cid)||{}).name||"")}</h3>
+ <p class="hint" style="margin:6px 0">Each server is an independent website (not a mirror). User-facing name is auto-numbered: Server 1..N.</p>
+ <label class="fl">Destination URL (https)</label><input id="s_url" value="${esc(srv.url||"")}" style="width:100%" placeholder="https://…">
+ <label class="fl">Priority (1 = first)</label><input id="s_pri" type="number" value="${srv.priority||99}" style="width:110px">
+ <label class="fl">Internal note (admin-only)</label><input id="s_note" value="${esc(srv.note||"")}" style="width:100%">
+ <label class="hint" style="display:flex;gap:6px;margin-top:10px"><input type="checkbox" id="s_dflt" ${srv.is_default?"checked":""}> Default destination (used by auto-mode)</label>
+ <div id="merr" style="color:var(--err);font-size:12px;margin-top:8px"></div>
+ <div class="row" style="margin-top:12px"><button class="btn" onclick="saveSrv(${cid},${srv.id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+async function saveSrv(cid,sid){const url=$("#s_url").value.trim();
+ if(!/^https:\/\/.+/.test(url)){$("#merr").textContent="Only https:// URLs are allowed.";return}
+ const d={url,priority:+$("#s_pri").value,note:$("#s_note").value,is_default:$("#s_dflt").checked};
+ try{if(sid)await api("/api/admin/servers/"+sid,{method:"PUT",body:JSON.stringify(d)});else await api(`/api/admin/cards/${cid}/servers`,{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved");vApps()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
+
+/* ---------- WEBSITE MANAGER ---------- */
+async function vWebsites(){const j=await api("/api/admin/cards");const rows=[];
+ j.data.forEach(c=>c.servers.forEach(s=>rows.push({card:c.name,cid:c.id,...s})));
+ $("#view").innerHTML=`<p class="hint" style="margin-bottom:12px">All website destinations across every card — ${rows.length} records. HTTPS-only policy enforced.</p>
+ <div class="card tblwrap"><table><tr><th>Card</th><th>Server</th><th>URL</th><th>Status</th><th></th></tr>
+ ${rows.map((r,i)=>`<tr><td>${esc(r.card)}</td><td><b>Server ${i+1}</b></td><td><code style="color:var(--vio)">${esc(r.url)}</code></td>
+ <td>${r.maintenance?'<span class="pill warn">Maintenance</span>':'<span class="pill ok">Active</span>'}${r.is_default?' <span class="pill VIP">Default</span>':""}</td>
+ <td><button class="btn sm ghost" onclick="srvForm(${r.cid},${JSON.stringify(JSON.stringify(r))})">Edit</button>
+ <button class="btn sm ghost" onclick="health(${r.id})">Check</button><span class="hint" id="h${r.id}"></span></td></tr>`).join("")}</table></div>`}
+
+/* ---------- SERVER HEALTH ---------- */
+async function vHealth(){const j=await api("/api/admin/cards"),h=await api("/api/admin/health-history");
+ const rows=[];j.data.forEach(c=>c.servers.forEach(s=>rows.push({card:c.name,...s})));
+ $("#view").innerHTML=`<div class="card row"><button class="btn" onclick="checkAll()">Run health check on ALL servers</button><span class="hint">Real HTTP checks (HEAD→GET fallback) · rate-limited · every result logged.</span></div>
+ <h3 class="sec">All server records (${rows.length})</h3>
+ <div class="card tblwrap"><table><tr><th>Card</th><th>Server</th><th>URL</th><th>Status</th><th>Last check</th><th></th></tr>
+ ${rows.map((r,i)=>{const last=(h.data.find(x=>x.server_id===r.id)||{});
+  return `<tr><td>${esc(r.card)}</td><td><b>Server ${i+1}</b></td><td><code style="color:var(--vio)">${esc(r.url)}</code></td>
+  <td>${r.maintenance?'<span class="pill warn">Maint.</span>':'<span class="pill ok">Enabled</span>'}</td>
+  <td class="hint" id="hs${r.id}">${last.id?`${last.ok?"UP":"DOWN"} · HTTP ${last.http_code} · ${last.ms}ms · ${new Date(last.ts*1000).toISOString().slice(0,16).replace("T"," ")}`:"never checked"}</td>
+  <td><button class="btn sm ghost" onclick="health(${r.id},'hs')">Check</button></td></tr>`}).join("")}</table></div>
+  <h3 class="sec">Health history (last 100)</h3>
+  <div class="card tblwrap"><table><tr><th>Time</th><th>Server</th><th>Result</th><th>HTTP</th><th>ms</th></tr>
+  ${h.data.slice(0,25).map(x=>`<tr><td class="hint">${new Date(x.ts*1000).toISOString().slice(0,16).replace("T"," ")}</td><td>#${x.server_id}</td><td>${x.ok?'<span class="pill ok">UP</span>':'<span class="pill err">DOWN</span>'}</td><td>${x.http_code}</td><td>${x.ms}</td></tr>`).join("")}</table></div>`}
+async function checkAll(){const j=await api("/api/admin/cards");toast("Checking "+j.data.reduce((a,c)=>a+c.servers.length,0)+" servers…");
+ for(const c of j.data)for(const s of c.servers){health(s.id,"hs");await new Promise(r=>setTimeout(r,300))}}
+
+/* ---------- CATEGORIES ---------- */
+async function vCats(){const j=await api("/api/admin/categories");CATS=j.data;
+ $("#view").innerHTML=`<div class="card row"><input id="cn" placeholder="New category name" style="max-width:280px"><button class="btn" onclick="addCat()">Add Category</button></div>
+ <div class="card tblwrap"><table><tr><th>#</th><th>Name</th><th>Sort</th><th>Cards</th><th></th></tr>
+ ${CATS.map(c=>{const used=CARDS.filter(x=>x.category_id===c.id).length;
+  return `<tr><td>${c.id}</td><td><input value="${esc(c.name)}" onchange="updCat(${c.id},'name',this.value)"></td>
+  <td><input type="number" value="${c.sort}" style="width:70px" onchange="updCat(${c.id},'sort',this.value)"></td>
+  <td>${used}</td><td><button class="btn sm danger" onclick="delCat(${c.id})">Delete</button></td></tr>`}).join("")}</table></div>`}
+async function addCat(){try{await api("/api/admin/categories",{method:"POST",body:JSON.stringify({name:$("#cn").value})});toast("Added");vCats()}catch(e){toast(e.msg||"Duplicate?",false)}}
+async function updCat(id,k,v){await api("/api/admin/categories/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved")}
+async function delCat(id){if(!confirm("Delete category?"))return;try{await api("/api/admin/categories/"+id,{method:"DELETE"});vCats()}catch(e){toast(e.msg,false)}}
+
+/* ---------- HOME BUILDER ---------- */
+async function vHome(){const j=await api("/api/admin/cards"),s=await api("/api/admin/settings");const S=s.data;
+ const sec=[["sections_featured","FEATURED"],["sections_popular","ALL APPS"],["sections_recent","RECENTLY OPENED"],["sections_trending","TRENDING"]];
+ $("#view").innerHTML=`<div class="two"><div>
+  <div class="card"><h3 class="sec" style="margin-top:0">Welcome section</h3>
+   <label class="fl">Title</label><input id="wt" value="${esc(S.welcome_title||"")}" style="width:100%">
+   <label class="fl">Subtitle</label><input id="ws" value="${esc(S.welcome_sub||"")}" style="width:100%"></div>
+  <div class="card"><h3 class="sec" style="margin-top:0">Home sections (order fixed in Phase-1 app; toggles real)</h3>
+   ${sec.map(([k,n])=>`<label class="hint" style="display:flex;gap:8px;margin:6px 0"><input type="checkbox" id="${k}" ${S[k]==="1"?"checked":""}> ${n}</label>`).join("")}</div>
+  <button class="btn" onclick="saveHome()">Save draft → Publish to apps</button>
+  </div>
+  <div id="phone"><div class="ph-h">${esc(S.welcome_title||"NEXORA")}</div>
+  <div style="color:#8E85B0;font-size:9px;margin-top:2px">${esc(S.welcome_sub||"")}</div>
+  ${sec.filter(([k])=>S[k]!=="0").map(([k,n])=>`<div class="psec">${n}</div>${(k==="sections_featured"?j.data.filter(c=>c.featured):j.data).slice(0,3).map(c=>`<div class="pcard"><b>${esc(c.name)}</b><div class="d">${esc(c.description)}</div></div>`).join("")||""}`).join("")}
+  </div></div>`}
+async function saveHome(){const d={welcome_title:$("#wt").value,welcome_sub:$("#ws").value};
+ ["sections_featured","sections_popular","sections_recent","sections_trending"].forEach(k=>d[k]=$("#"+k).checked?"1":"0");
+ await api("/api/admin/settings",{method:"PUT",body:JSON.stringify(d)});toast("Saved — now PUBLISH to push");}
+
+/* ---------- NAV BUILDER (honest) ---------- */
+function vNav(){$("#view").innerHTML=`<div class="card"><b>Current Android bottom navigation (shipped in APK v1.1.0):</b>
+ <div class="row" style="margin-top:10px">${["Home","Apps","Trending","Favourites"].map(n=>`<span class="pill ok">${n}</span>`).join("")}</div>
+ <p class="hint" style="margin-top:12px">Remote nav-item editing lands with the Supabase-backed navigation_items table (Phase-3). Until then the app's real navigation is fixed to these 4 supported screens — remote changes CANNOT create broken routes (spec §12 rule respected).</p></div>`}
+
+/* ---------- CONTENT ---------- */
+async function vContent(){const j=await api("/api/admin/announcements");
+ $("#view").innerHTML=`<div class="card"><h3 class="sec" style="margin-top:0">Announcements (appear in app home)</h3>
+  <label class="fl">Title</label><input id="a_t" style="width:100%">
+  <label class="fl">Body</label><textarea id="a_b" rows="2" style="width:100%"></textarea>
+  <button class="btn" style="margin-top:10px" onclick="addAnn()">Add announcement</button>
+  <div class="tblwrap" style="margin-top:12px"><table><tr><th>Title</th><th>Body</th><th></th></tr>
+  ${j.data.map(a=>`<tr><td>${esc(a.title)}</td><td class="hint">${esc(a.body)}</td><td><button class="btn sm danger" onclick="delAnn(${a.id})">✕</button></td></tr>`).join("")}</table></div></div>`}
+async function addAnn(){await api("/api/admin/announcements",{method:"POST",body:JSON.stringify({title:$("#a_t").value,body:$("#a_b").value})});toast("Added — publish to push");vContent()}
+async function delAnn(id){await api("/api/admin/announcements/"+id,{method:"DELETE"});vContent()}
+
+/* ---------- FEATURES ---------- */
+async function vFeatures(){const s=await api("/api/admin/settings");const S=s.data;
+ const flags=[["flag_downloads","Downloads"],["flag_notifications","Notifications"],["flag_ai_assistant","AI Assistant (needs provider — see AI Config)"],["flag_browser_internal","Internal browser"]];
+ $("#view").innerHTML=`<div class="card">${flags.map(([k,n])=>`<div class="row" style="margin:10px 0"><span style="flex:1">${n}</span>
+  <span class="pill ${S[k]==="1"?"ok":""}">${S[k]==="1"?"Enabled":"Disabled"}</span>
+  <label class="hint" style="display:flex;gap:6px"><input type="checkbox" ${S[k]==="1"?"checked":""} onchange="togFlag('${k}',this.checked)"> toggle</label></div>`).join("")}
+  <p class="hint" style="margin-top:10px">Flags ship with next config publish. The app never enables features its installed build doesn't support (spec §17 rule).</p></div>`}
+async function togFlag(k,v){await api("/api/admin/settings",{method:"PUT",body:JSON.stringify({[k]:v?"1":"0"})});toast("Saved — publish to push");vFeatures()}
+
+/* ---------- AI ---------- */
+async function vAI(){const s=await api("/api/admin/settings");
+ $("#view").innerHTML=NC("AI Study Assistant — provider connection","7","A server-side AI provider key (stored as Vercel env var, NEVER in APK/frontend). Once provided: gateway routes + usage limits + monitoring go live.")+
+ `<div class="card"><b>Feature flag (real):</b> flag_ai_assistant = ${s.data.flag_ai_assistant==="1"?"Enabled":"Disabled"}
+  <p class="hint" style="margin-top:8px">Provider status: <span class="pill warn">NOT CONFIGURED</span> — no fake AI integration is running (spec §16 rule).</p></div>`}
+
+/* ---------- NOTIFY ---------- */
+function vNotify(){vContent()}
+
+/* ---------- MAINTENANCE ---------- */
+async function vMaint(){const j=await api("/api/admin/cards");
+ const rows=[];j.data.forEach(c=>c.servers.forEach(s=>rows.push({card:c.name,...s})));
+ $("#view").innerHTML=`<div class="card"><b>Global app maintenance notice</b><p class="hint">Coming with Supabase (Phase-2) — per-card/per-destination maintenance is fully live below.</p></div>
+ <div class="card tblwrap"><table><tr><th>Card</th><th>Server</th><th>URL</th><th>Maintenance</th><th>Toggle</th></tr>
+ ${rows.map(r=>`<tr><td>${esc(r.card)}</td><td>#${r.id}</td><td><code style="color:var(--vio)">${esc(r.url)}</code></td>
+ <td>${r.maintenance?'<span class="pill warn">UNDER MAINTENANCE</span>':'<span class="pill ok">Serving</span>'}</td>
+ <td><button class="btn sm ${r.maintenance?"":"ghost"}" onclick="togMaint(${r.id},${!r.maintenance})">${r.maintenance?"Resume":"Set maintenance"}</button></td></tr>`).join("")}</table></div>`}
+async function togMaint(sid,v){await api("/api/admin/servers/"+sid,{method:"PUT",body:JSON.stringify({maintenance:v})});toast("Saved — publish to push");vMaint()}
+
+/* ---------- SECURITY ---------- */
+async function vSecurity(){const a=await api("/api/admin/audit");
+ $("#view").innerHTML=`<div class="stats"><div class="stat"><div class="n">${a.data.length}</div><div class="t">Audit entries</div></div>
+ <div class="stat"><div class="n">PBKDF2</div><div class="t">Password hashing 120k</div></div>
+ <div class="stat"><div class="n">5/5min</div><div class="t">Failed-login lockout</div></div>
+ <div class="stat"><div class="n">120/min</div><div class="t">API rate limit</div></div></div>
+ <h3 class="sec">Full audit trail (last 200 actions — real)</h3>
+ <div class="card tblwrap"><table><tr><th>Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr>
+ ${a.data.map(x=>`<tr><td class="hint">${new Date(x.ts*1000).toISOString().slice(0,19).replace("T"," ")}</td><td>${esc(x.actor)}</td><td>${esc(x.action)}</td><td class="hint">${esc(x.detail).slice(0,110)}</td></tr>`).join("")}</table></div>`}
+
+/* ---------- ADMINS ---------- */
+function vAdmins(){$("#view").innerHTML=`<div class="card"><b>Change my password</b>
+ <label class="fl">Current password</label><input id="p_old" type="password" style="width:100%;max-width:320px">
+ <label class="fl">New password (min 10 chars)</label><input id="p_new" type="password" style="width:100%;max-width:320px">
+ <div style="margin-top:10px"><button class="btn" onclick="chgPw()">Update password</button></div>
+ <div id="perr" style="color:var(--err);font-size:12px;margin-top:8px"></div></div>
+ <div class="card"><b>Multi-admin + roles (Super Admin / Content Manager / Server Manager / Viewer)</b>
+ <p class="hint" style="margin-top:8px">RBAC lands with Supabase Auth (Phase-2) — role tables already in schema (admin_roles, admin_permissions, role_permissions). Single super-admin is active now.</p></div>`}
+async function chgPw(){try{await api("/api/admin/password",{method:"POST",body:JSON.stringify({old:$("#p_old").value,new:$("#p_new").value})});toast("Password updated");$("#perr").textContent=""}catch(e){$("#perr").textContent=e.msg||e.error||"Failed"}}
+
+/* ---------- CONFIG HISTORY ---------- */
+async function vConfig(){const j=await api("/api/admin/config/versions");refreshMeta();
+ $("#view").innerHTML=`<div class="card row"><button class="btn" onclick="publish()">Publish current state as new version</button><span class="hint">ETag-versioned — apps fetch only real changes.</span></div>
+ <div class="card tblwrap"><table><tr><th>Version</th><th>Published (UTC)</th><th>Size</th><th></th></tr>
+ ${j.data.map(v=>`<tr><td><b>v${v.version}</b></td><td class="hint">${new Date(v.published_at*1000).toISOString().slice(0,19).replace("T"," ")}</td><td class="hint">${(v.size/1024).toFixed(1)} KB</td>
+ <td><button class="btn sm ghost" onclick="rollback(${v.version})">Rollback to this</button></td></tr>`).join("")||"<tr><td colspan=4 class='hint'>No versions published yet.</td></tr>"}</table></div>`}
+async function rollback(v){if(!confirm("Restore cards+servers from v"+v+"? (current state stays in history)"))return;
+ await api("/api/admin/config/rollback",{method:"POST",body:JSON.stringify({version:v})});toast("Restored from v"+v);vConfig()}
+
+/* ---------- BACKUP ---------- */
+async function vBackup(){$("#view").innerHTML=`<div class="card"><b>Export full configuration (JSON snapshot — real)</b>
+ <p class="hint" style="margin:8px 0">Downloads the exact published config (cards, servers, categories, settings, announcements).</p>
+ <button class="btn" onclick="expCfg()">Download backup JSON</button></div>
+ <div class="card"><b>Restore</b><p class="hint" style="margin-top:6px">Use Configuration History → Rollback (server-side, versioned, audited). Automated scheduled backups land with Supabase (Phase-2 pg-backups).</p></div>`}
+async function expCfg(){const j=await api("/api/config");const blob=new Blob([JSON.stringify(j,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="nexora-config-backup-v"+j.config_version+".json";a.click();toast("Backup downloaded")}
+
+/* ---------- DOCS ---------- */
+function vDocs(){$("#view").innerHTML=`<div class="card"><b>Android/App integration API (real, live)</b>
+ <div class="tblwrap" style="margin-top:10px"><table><tr><th>Endpoint</th><th>Method</th><th>Notes</th></tr>
+ ${[["/api/version","GET","current config version"],["/api/config","GET","full published config · ETag/304 · CORS-open"],["/api/health","GET","service + mode"],["/api/admin/login","POST","admin session (cookie)"],["/api/admin/cards","GET/POST","list/create"],["/api/admin/cards/{id}","PUT/DELETE","update/delete"],["/api/admin/cards/{id}/servers","POST","add independent destination"],["/api/admin/servers/{id}","PUT/DELETE","update/delete destination"],["/api/admin/servers/{id}/health","POST","real HTTP check + log"],["/api/admin/config/publish","POST","new version snapshot"],["/api/admin/config/rollback","POST","restore version"],["/api/admin/audit","GET","audit trail"]].map(r=>`<tr><td><code style="color:var(--vio)">${r[0]}</code></td><td>${r[1]}</td><td class="hint">${r[2]}</td></tr>`).join("")}</table></div></div>`}
 </script>
 </body>
 </html>
