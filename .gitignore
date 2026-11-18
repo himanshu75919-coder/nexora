@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+nexora.db
+admin-vercel/.vercel/
+admin-vercel/api/nexora.db
+*.log

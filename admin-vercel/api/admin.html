@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA — Admin Panel</title>
+<style>
+:root{--bg:#0b0714;--bg2:#120a1f;--glass:rgba(139,92,246,.08);--glass2:rgba(139,92,246,.16);--line:rgba(167,139,250,.22);--txt:#ece9f7;--sub:#a79fc4;--vio:#8b5cf6;--vio2:#a78bfa;--neon:#c084fc;--ok:#34d399;--warn:#fbbf24;--err:#f87171}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Plus Jakarta Sans,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(1200px 800px at 80% -10%,rgba(139,92,246,.18),transparent),radial-gradient(900px 700px at -10% 110%,rgba(76,29,149,.25),transparent),var(--bg);color:var(--txt);min-height:100vh}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(10px)}
+#login{max-width:400px;margin:12vh auto;padding:34px}
+#login h1{font-size:26px;letter-spacing:.4em;text-align:center;margin-bottom:4px}
+#login .tag{text-align:center;color:var(--sub);font-size:11px;letter-spacing:.2em;margin-bottom:26px}
+label{display:block;font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em;margin:12px 0 6px}
+input,select,textarea{width:100%;background:rgba(20,12,35,.7);border:1px solid var(--line);border-radius:10px;padding:11px 13px;color:var(--txt);font-size:14px;outline:none}
+input:focus{border-color:var(--vio2);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--vio),#6d28d9);border:none;color:#fff;padding:11px 18px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.04em}
+.btn:hover{filter:brightness(1.12)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--vio2);font-weight:600}
+.btn.sm{padding:6px 10px;font-size:11px;border-radius:8px}
+.btn.danger{background:linear-gradient(135deg,#b91c1c,#7f1d1d)}
+.err{color:var(--err);font-size:12px;margin-top:10px;min-height:16px}
+#shell{display:none;grid-template-columns:230px 1fr;min-height:100vh}
+#side{padding:22px 14px;border-right:1px solid var(--line)}
+#side .logo{font-size:20px;letter-spacing:.35em;padding:6px 10px 18px}
+#side a{display:block;padding:10px 14px;border-radius:10px;color:var(--sub);font-size:13px;cursor:pointer;text-decoration:none}
+#side a:hover,#side a.on{background:var(--glass2);color:var(--txt)}
+#main{padding:26px;max-width:1150px}
+#top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+#top h2{font-size:20px}
+#top .who{font-size:12px;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.stat{padding:18px}
+.stat .n{font-size:26px;font-weight:800;color:var(--neon)}
+.stat .t{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em;margin-top:4px}
+.card{padding:16px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font-size:10px;padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--vio2);text-transform:uppercase;letter-spacing:.08em}
+.pill.HOT{color:#fca5a5;border-color:rgba(248,113,113,.4)}.pill.NEW{color:#6ee7b7;border-color:rgba(52,211,153,.4)}
+.pill.TRENDING{color:#fcd34d;border-color:rgba(251,191,36,.4)}.pill.VIP{color:#c4b5fd;border-color:rgba(196,181,253,.5)}
+.off{opacity:.45}
+.srv{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(20,12,35,.6);border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:12px}
+.srv code{color:var(--vio2);word-break:break-all}
+.tag2{font-size:10px;color:var(--sub)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;color:var(--sub)}
+td{color:var(--txt)}
+h3{font-size:14px;margin:18px 0 10px;color:var(--vio2)}
+#phone{width:300px;height:560px;border-radius:30px;border:2px solid var(--line);background:#0d0818;padding:16px;overflow:auto;position:sticky;top:20px}
+#phone .pcard{background:var(--glass2);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+#phone .pcard b{font-size:13px}
+#phone .pcard .d{font-size:11px;color:var(--sub);margin-top:3px}
+#phone .psec{font-size:11px;color:var(--neon);letter-spacing:.2em;margin:14px 0 8px;text-transform:uppercase}
+.two{display:grid;grid-template-columns:1fr 320px;gap:22px}
+@media(max-width:900px){.two{grid-template-columns:1fr}#shell{grid-template-columns:1fr}#side{display:flex;flex-wrap:wrap}}
+.modal-bg{position:fixed;inset:0;background:rgba(5,3,12,.7);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal{width:min(560px,92vw);max-height:86vh;overflow:auto;padding:24px}
+</style>
+</head>
+<body>
+<div id="modeBanner" style="display:none;margin:0 auto 14px;max-width:400px;padding:10px 14px;border-radius:12px;border:1px solid rgba(251,191,36,.35);background:rgba(251,191,36,.08);color:#fbbf24;font-size:11px"></div>
+<div id="login" class="glass">
+  <h1>NEXORA</h1><div class="tag">ADMIN CONSOLE</div>
+  <label>Email</label><input id="em" type="email" value="admin@nexora.app">
+  <label>Password</label><input id="pw" type="password" placeholder="••••••••••">
+  <div class="err" id="lerr"></div>
+  <button class="btn" style="width:100%" onclick="login()">Sign In</button>
+  <p style="font-size:11px;color:var(--sub);margin-top:14px">Default password is set at first run — change it right after login (Profile → Change password).</p>
+</div>
+<div id="shell">
+  <div id="side">
+    <div class="logo">NEXORA</div>
+    <a class="on" data-v="dash">Dashboard</a><a data-v="apps">App Manager</a><a data-v="cats">Categories</a>
+    <a data-v="content">Content</a><a data-v="config">Config & Rollback</a><a data-v="audit">Audit Log</a>
+    <a onclick="logout()">Sign Out</a>
+  </div>
+  <div id="main">
+    <div id="top"><h2 id="ttl">Dashboard</h2><div class="who" id="who"></div></div>
+    <div id="view"></div>
+  </div>
+</div>
+<div id="modal" style="display:none"></div>
+<script>
+let $=s=>document.querySelector(s), me=null;
+const api=async(p,o)=>{const r=await fetch(p,{headers:{"Content-Type":"application/json"},credentials:"same-origin",...o});const j=await r.json().catch(()=>({}));if(r.status===401&&me)logout();if(!r.ok&&j.error)throw j;j._st=r.status;return j};
+fetch("/api/health").then(r=>r.json()).then(h=>{ if(h.mode==="local-ephemeral"){ const b=document.getElementById("modeBanner"); b.style.display="block"; b.textContent="LOCAL-EPHEMERAL MODE — data resets on redeploy. Supabase connect pending (Phase-2: create Supabase project → set env vars)."; } }).catch(()=>{});
+async function login(){try{$("#lerr").textContent="";const j=await api("/api/admin/login",{method:"POST",body:JSON.stringify({email:$("#em").value,password:$("#pw").value})});me=j;openApp()}catch(e){$("#lerr").textContent=e.msg||"Invalid credentials"}}
+function logout(){api("/api/admin/logout",{method:"POST"});location.reload()}
+function openApp(){$("#login").style.display="none";$("#shell").style.display="grid";$("#who").textContent=me.email+" · "+me.role;nav("dash")}
+document.querySelectorAll("#side a[data-v]").forEach(a=>a.onclick=()=>nav(a.dataset.v));
+function nav(v){document.querySelectorAll("#side a[data-v]").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
+  ({dash:dashboard,apps:appsView,cats:catsView,content:contentView,config:configView,audit:auditView})[v]()}
+function toast(m,ok=true){const d=document.createElement("div");d.textContent=m;d.style.cssText=`position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:12px;font-size:13px;z-index:99;background:${ok?"#134e33":"#4c1d1d"};border:1px solid ${ok?"#34d399":"#f87171"}`;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+
+async function dashboard(){const j=await api("/api/admin/overview");const d=j.data;
+  $("#ttl").textContent="Dashboard";
+  $("#view").innerHTML=`<div class="grid">
+   ${[["Cards",d.cards],["Servers",d.servers],["Categories",d.categories],["Announcements",d.announcements],["Config Version",d.version],["Health Checks",d.health_checks]].map(([t,n])=>`<div class="glass stat"><div class="n">${n}</div><div class="t">${t}</div></div>`).join("")}</div>
+   <h3>Quick actions</h3><div class="row"><button class="btn" onclick="nav('apps')">Open App Manager</button><button class="btn ghost" onclick="publish(true)">Publish Config v${d.version+1}</button></div>`}
+
+let CARDS=[],CATS=[];
+async function appsView(){const j=await api("/api/admin/cards"),k=await api("/api/admin/categories");CARDS=j.data;CATS=k.data;
+  $("#ttl").textContent="App Manager";
+  $("#view").innerHTML=`<div class="row" style="margin-bottom:14px"><button class="btn" onclick="cardForm()">+ New App Card</button>
+   <button class="btn ghost" onclick="publish(true)">Publish changes</button>
+   <span class="tag2">Servers inside each card are independent websites — numbered Server 1..N for users.</span></div>
+   <div class="two"><div id="clist">${CARDS.map(c=>cardHTML(c)).join("")||"<p class='tag2'>No cards yet.</p>"}</div>
+   <div id="phone"><div class="psec">Live Preview</div>${phoneHTML()}</div></div>`;
+  bindToggles()}
+function catName(id){return (CATS.find(c=>c.id===id)||{}).name||"—"}
+function cardHTML(c){return `<div class="glass card ${c.enabled?"":"off"}" id="c${c.id}">
+ <div class="row"><b style="font-size:15px">${c.name}</b>
+ ${["HOT","NEW","TRENDING","VIP"].includes(c.label)?`<span class="pill ${c.label}">${c.label}</span>`:""}
+ ${c.featured?'<span class="pill">Featured</span>':""}<span class="pill">${catName(c.category_id)}</span>
+ <span style="flex:1"></span>
+ <button class="btn sm ghost" onclick="cardForm(${c.id})">Edit</button>
+ <button class="btn sm ghost" onclick="dup(${c.id})">Duplicate</button>
+ <button class="btn sm danger" onclick="delCard(${c.id})">Delete</button></div>
+ <div class="tag2" style="margin-top:6px">${c.description||""}</div>
+ ${c.servers.map((s,i)=>`<div class="srv"><b>Server ${i+1}</b><code>${s.url}</code>
+   ${s.is_default?'<span class="pill">Default</span>':""}${s.maintenance?'<span class="pill" style="color:#fbbf24">Maint.</span>':""}
+   <span style="flex:1"></span>
+   <button class="btn sm ghost" onclick="health(${s.id})">Check</button>
+   <button class="btn sm ghost" onclick="srvForm(${c.id},${JSON.stringify(JSON.stringify(s))})">Edit</button>
+   <button class="btn sm danger" onclick="delSrv(${s.id},${c.id})">✕</button>
+   <span class="tag2" id="h${s.id}"></span></div>`).join("")||"<div class='tag2' style='margin-top:8px'>No servers yet.</div>"}
+ <div class="row" style="margin-top:10px"><button class="btn sm" onclick="srvForm(${c.id})">+ Add Server</button>
+ <span style="flex:1"></span>
+ <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="en${c.id}" ${c.enabled?"checked":""} onchange="tog(${c.id},'enabled',this.checked)"> Enabled</label>
+ <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="ft${c.id}" ${c.featured?"checked":""} onchange="tog(${c.id},'featured',this.checked)"> Featured</label></div></div>`}
+function phoneHTML(){return CARDS.filter(c=>c.enabled).map(c=>`<div class="pcard"><b>${c.name}</b>${c.label?` <span class="pill ${c.label}">${c.label}</span>`:""}<div class="d">${c.description||""}</div><div class="tag2" style="margin-top:6px">Servers: ${c.servers.length}</div><button class="btn sm" style="margin-top:8px">OPEN</button></div>`).join("")}
+function bindToggles(){}
+async function tog(id,k,v){await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved");appsView()}
+async function dup(id){await api(`/api/admin/cards/${id}/duplicate`,{method:"POST"});toast("Duplicated (disabled)");appsView()}
+async function delCard(id){if(!confirm("Delete card + its servers?"))return;await api("/api/admin/cards/"+id,{method:"DELETE"});toast("Deleted");appsView()}
+async function delSrv(sid,cid){if(!confirm("Delete server?"))return;await api("/api/admin/servers/"+sid,{method:"DELETE"});toast("Server deleted");appsView()}
+async function health(sid){$("#h"+sid).textContent="…checking";const j=await api(`/api/admin/servers/${sid}/health`,{method:"POST"});
+ const r=j.result;$("#h"+sid).innerHTML=`<span style="color:${r.up?"var(--ok)":"var(--err)"}">${r.up?"UP":"DOWN"} · HTTP ${r.http||"-"} · ${r.ms}ms</span>`}
+function cardForm(id){const c=id?CARDS.find(x=>x.id===id):{name:"",description:"",logo:"",category_id:CATS[0]?.id,label:"",browser:"internal",featured:false,enabled:true};
+ modal(`<h3>${id?"Edit Card":"New App Card"}</h3>
+ <label>Name</label><input id="f_name" value="${esc(c.name)}">
+ <label>Description</label><input id="f_desc" value="${esc(c.description||"")}">
+ <label>Logo URL (optional)</label><input id="f_logo" value="${esc(c.logo||"")}">
+ <label>Category</label><select id="f_cat">${CATS.map(x=>`<option value="${x.id}" ${x.id===c.category_id?"selected":""}>${x.name}</option>`).join("")}</select>
+ <label>Label</label><select id="f_label">${["","NEW","HOT","TRENDING","VIP"].map(l=>`<option ${l===(c.label||"")?"selected":""}>${l}</option>`).join("")}</select>
+ <label>Browser</label><select id="f_br"><option value="internal" ${c.browser==="internal"?"selected":""}>Internal</option><option value="external" ${c.browser==="external"?"selected":""}>External</option></select>
+ <div class="row" style="margin-top:10px"><label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="f_ft" ${c.featured?"checked":""}> Featured</label>
+ <label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="f_en" ${c.enabled?"checked":""}> Enabled</label></div>
+ <div class="err" id="merr"></div><div class="row" style="margin-top:14px"><button class="btn" onclick="saveCard(${id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+async function saveCard(id){const d={name:$("#f_name").value,description:$("#f_desc").value,logo:$("#f_logo").value,category_id:+$("#f_cat").value,label:$("#f_label").value,browser:$("#f_br").value,featured:$("#f_ft").checked,enabled:$("#f_en").checked};
+ try{if(id)await api("/api/admin/cards/"+id,{method:"PUT",body:JSON.stringify(d)});else await api("/api/admin/cards",{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved");appsView()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
+function srvForm(cid,s){const srv=s?JSON.parse(s):{};modal(`<h3>${s?"Edit Server":"Add Server"} — Card #${cid}</h3>
+ <label>URL (independent website)</label><input id="s_url" value="${esc(srv.url||"")}" placeholder="https://…">
+ <label>Priority (1 = first)</label><input id="s_pri" type="number" value="${srv.priority||99}">
+ <label>Note (admin-only)</label><input id="s_note" value="${esc(srv.note||"")}" placeholder="internal label, users only see Server N">
+ <label style="margin-top:10px;display:flex;gap:6px"><input type="checkbox" id="s_dflt" ${srv.is_default?"checked":""}> Default server</label>
+ <div class="err" id="merr"></div><div class="row" style="margin-top:14px"><button class="btn" onclick="saveSrv(${cid},${srv.id||0})">Save</button><button class="btn ghost" onclick="closeM()">Cancel</button></div>`)}
+async function saveSrv(cid,sid){const d={url:$("#s_url").value,priority:+$("#s_pri").value,note:$("#s_note").value,is_default:$("#s_dflt").checked};
+ try{if(sid)await api("/api/admin/servers/"+sid,{method:"PUT",body:JSON.stringify(d)});else await api(`/api/admin/cards/${cid}/servers`,{method:"POST",body:JSON.stringify(d)});closeM();toast("Saved");appsView()}catch(e){$("#merr").textContent=e.msg||e.error||"Failed"}}
+async function catsView(){const j=await api("/api/admin/categories");CATS=j.data;$("#ttl").textContent="Categories";
+ $("#view").innerHTML=`<div class="row" style="margin-bottom:12px"><input id="cn" placeholder="New category name" style="max-width:280px"><button class="btn" onclick="addCat()">Add</button></div>
+ <div class="glass card"><table><tr><th>#</th><th>Name</th><th>Sort</th><th></th></tr>${CATS.map(c=>`<tr><td>${c.id}</td><td><input value="${esc(c.name)}" onchange="updCat(${c.id},'name',this.value)"></td><td><input type="number" value="${c.sort}" style="width:70px" onchange="updCat(${c.id},'sort',this.value)"></td><td><button class="btn sm danger" onclick="delCat(${c.id})">✕</button></td></tr>`).join("")}</table></div>`}
+async function addCat(){try{await api("/api/admin/categories",{method:"POST",body:JSON.stringify({name:$("#cn").value})});catsView()}catch(e){toast(e.msg||"Duplicate?",false)}}
+async function updCat(id,k,v){await api("/api/admin/categories/"+id,{method:"PUT",body:JSON.stringify({[k]:v})});toast("Saved")}
+async function delCat(id){if(!confirm("Delete category?"))return;try{await api("/api/admin/categories/"+id,{method:"DELETE"});catsView()}catch(e){toast(e.msg,false)}}
+async function contentView(){const j=await api("/api/admin/announcements"),s=await api("/api/admin/settings");const A=j.data,S=s.data;
+ $("#ttl").textContent="Content & Features";
+ $("#view").innerHTML=`<h3>Home settings</h3><div class="glass card">
+  <label>Welcome title</label><input id="wt" value="${esc(S.welcome_title||"")}">
+  <label>Welcome subtitle</label><input id="ws" value="${esc(S.welcome_sub||"")}">
+  <div class="row" style="margin-top:12px">${["sections_featured","sections_popular","sections_recent","sections_trending","flag_downloads","flag_notifications","flag_ai_assistant"].map(k=>`<label style="margin:0;display:flex;gap:6px"><input type="checkbox" id="${k}" ${S[k]==="1"?"checked":""}> ${k.replace(/^(sections|flag)_/,"")}</label>`).join("")}</div>
+  <button class="btn" style="margin-top:12px" onclick="saveSettings()">Save settings</button></div>
+ <h3>Announcements</h3><div class="glass card">
+  <label>Title</label><input id="a_t"><label>Body</label><textarea id="a_b" rows="2"></textarea>
+  <div class="row" style="margin-top:10px"><button class="btn" onclick="addAnn()">Add announcement</button></div>
+  <table style="margin-top:10px"><tr><th>Title</th><th>Body</th><th></th></tr>${A.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.body)}</td><td><button class="btn sm danger" onclick="delAnn(${a.id})">✕</button></td></tr>`).join("")}</table></div>`}
+async function saveSettings(){const d={welcome_title:$("#wt").value,welcome_sub:$("#ws").value};
+ ["sections_featured","sections_popular","sections_recent","sections_trending","flag_downloads","flag_notifications","flag_ai_assistant"].forEach(k=>d[k]=$("#"+k).checked?"1":"0");
+ await api("/api/admin/settings",{method:"PUT",body:JSON.stringify(d)});toast("Saved — publish to push to apps")}
+async function addAnn(){await api("/api/admin/announcements",{method:"POST",body:JSON.stringify({title:$("#a_t").value,body:$("#a_b").value})});toast("Added — publish to push");contentView()}
+async function delAnn(id){await api("/api/admin/announcements/"+id,{method:"DELETE"});contentView()}
+async function configView(){const j=await api("/api/admin/config/versions");$("#ttl").textContent="Config & Rollback";
+ $("#view").innerHTML=`<div class="row" style="margin-bottom:14px"><button class="btn" onclick="publish()">Publish current state as new version</button>
+  <span class="tag2">Apps fetch /api/config with ETag — only real changes consume bandwidth. Publish before users see edits.</span></div>
+  <div class="glass card"><table><tr><th>Version</th><th>Published (UTC)</th><th>Size</th><th></th></tr>
+  ${j.data.map(v=>`<tr><td>v${v.version}</td><td>${new Date(v.published_at*1000).toISOString().slice(0,19).replace("T"," ")}</td><td>${(v.size/1024).toFixed(1)} KB</td>
+  <td><button class="btn sm ghost" onclick="rollback(${v.version})">Rollback to this</button></td></tr>`).join("")}</table></div>`}
+async function publish(skip){const j=await api("/api/admin/config/publish",{method:"POST"});toast("Published v"+j.version);nav(skip?"apps":"config")}
+async function rollback(v){if(!confirm("Restore card+server data from v"+v+"?"))return;await api("/api/admin/config/rollback",{method:"POST",body:JSON.stringify({version:v})});toast("Restored from v"+v);configView()}
+async function auditView(){const j=await api("/api/admin/audit");$("#ttl").textContent="Audit Log";
+ $("#view").innerHTML=`<div class="glass card"><table><tr><th>Time</th><th>Actor</th><th>Action</th><th>Detail</th></tr>
+ ${j.data.map(a=>`<tr><td>${new Date(a.ts*1000).toISOString().slice(11,19)}</td><td>${a.actor}</td><td>${a.action}</td><td class="tag2">${esc(a.detail||"").slice(0,120)}</td></tr>`).join("")}</table></div>`}
+function modal(html){$("#modal").className="modal-bg";$("#modal").style.display="flex";$("#modal").innerHTML=`<div class="glass modal">${html}</div>`}
+function closeM(){$("#modal").style.display="none"}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")}
+</script>
+</body>
+</html>
