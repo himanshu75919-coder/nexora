@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b0714">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>NEXORA</title>
+<style>
+:root{--bg:#0b0714;--glass:rgba(139,92,246,.08);--glass2:rgba(139,92,246,.16);--line:rgba(167,139,250,.22);--txt:#ece9f7;--sub:#a79fc4;--vio:#8b5cf6;--neon:#c084fc;--warn:#fbbf24;--ok:#34d399;--err:#f87171}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Plus Jakarta Sans,system-ui,sans-serif;background:radial-gradient(900px 600px at 85% -10%,rgba(139,92,246,.20),transparent),radial-gradient(700px 500px at -10% 110%,rgba(76,29,149,.28),transparent),var(--bg);color:var(--txt);min-height:100vh;padding-bottom:90px}
+header{padding:26px 18px 8px;position:sticky;top:0;background:linear-gradient(var(--bg) 78%,transparent);z-index:5}
+header h1{font-size:20px;letter-spacing:.3em}
+header .sub{font-size:10px;color:var(--sub);letter-spacing:.16em;margin-top:3px}
+#ver{float:right;font-size:9px;color:var(--sub);border:1px solid var(--line);padding:3px 8px;border-radius:99px}
+#install{display:none;margin:10px 18px 0;width:calc(100% - 36px);background:linear-gradient(135deg,var(--vio),#6d28d9);border:none;color:#fff;padding:12px;border-radius:12px;font-weight:700;font-size:13px}
+#search{margin:12px 18px;width:calc(100% - 36px);background:rgba(20,12,35,.7);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--txt);font-size:14px;outline:none}
+.ann{margin:10px 18px;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.ann b{color:var(--neon);font-size:12px}.ann p{font-size:11px;color:var(--sub);margin-top:3px}
+.sec{font-size:10px;color:var(--neon);letter-spacing:.22em;margin:18px 18px 8px;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.tile{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tile .head{display:flex;gap:9px;align-items:center}
+.av{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0}
+.tile b{font-size:13.5px;display:block;line-height:1.25}
+.tile .d{font-size:10.5px;color:var(--sub);margin-top:4px;line-height:1.45;max-height:44px;overflow:hidden}
+.tile .meta{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:9px;color:var(--sub)}
+.pill{font-size:8.5px;padding:2px 7px;border-radius:99px;border:1px solid var(--line);color:var(--vio);font-weight:700;letter-spacing:.06em}
+.pill.HOT{color:var(--err);border-color:rgba(248,113,113,.45)}.pill.NEW{color:var(--ok);border-color:rgba(52,211,153,.45)}
+.pill.TRENDING{color:var(--warn);border-color:rgba(251,191,36,.45)}.pill.VIP{color:#c4b5fd}
+.fav{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--sub);font-size:16px}
+.fav.on{color:var(--warn)}
+.skel{height:78px;border-radius:16px;background:linear-gradient(90deg,var(--glass) 25%,var(--glass2) 50%,var(--glass) 75%);background-size:200% 100%;animation:sh 1.2s infinite;margin:0 4px}
+@keyframes sh{to{background-position:-200% 0}}
+#sheetbg{position:fixed;inset:0;background:rgba(4,2,10,.66);display:none;z-index:20;align-items:flex-end}
+#sheet{background:#120a1f;border-radius:22px 22px 0 0;border-top:1px solid var(--line);padding:18px 18px 30px;max-height:72vh;overflow:auto}
+#sheet h3{font-size:16px}#sheet .h{font-size:10.5px;color:var(--sub);margin:4px 0 12px}
+.srv{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:8px;color:var(--txt);text-decoration:none}
+.srv b{font-size:13.5px}.srv .u{font-size:9px;color:var(--sub);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag{font-size:8px;color:var(--neon);font-weight:700;margin-left:auto}
+#bottomnav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,7,20,.92);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 0 14px;backdrop-filter:blur(10px)}
+#bottomnav button{background:none;border:none;color:var(--sub);font-size:10px;display:flex;flex-direction:column;gap:3px;align-items:center}
+#bottomnav button.on{color:var(--neon)}
+#bottomnav .ic{font-size:17px}
+.empty{padding:40px 30px;text-align:center;color:var(--sub);font-size:12.5px}
+.offbar{margin:8px 18px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);color:var(--warn);font-size:10.5px;padding:8px 12px;border-radius:12px;display:none}
+</style>
+</head>
+<body>
+<header>
+  <span id="ver">v0</span>
+  <h1>NEXORA</h1><div class="sub">ONE PLATFORM · MULTIPLE WEBSITES</div>
+</header>
+<button id="install">⬇ INSTALL NEXORA APP</button>
+<div class="offbar" id="offbar">OFFLINE — showing last saved configuration.</div>
+<input id="search" placeholder="Search apps…" autocomplete="off">
+<div id="ann"></div>
+<div id="content"><div class="grid" id="grid"></div></div>
+<div id="bottomnav">
+  <button class="on" data-t="home"><span class="ic">⌂</span>Home</button>
+  <button data-t="apps"><span class="ic">▦</span>Apps</button>
+  <button data-t="trend"><span class="ic">🔥</span>Trending</button>
+  <button data-t="fav"><span class="ic">★</span>Favourites</button>
+</div>
+<div id="sheetbg"><div id="sheet"></div></div>
+<script>
+let CFG=null, ETAG=localStorage.getItem("nx_etag"), deferredPrompt=null;
+const DEFAULT_BASE="https://nexora-admin-iota.vercel.app";
+const FAV=JSON.parse(localStorage.getItem("nx_fav")||"[]"), REC=JSON.parse(localStorage.getItem("nx_rec")||"[]");
+const $=s=>document.querySelector(s);
+const AVCOLORS=["#8B5CF6","#6D28D9","#A855F7","#7C3AED","#9333EA","#5B21B6","#C084FC","#8B5CF6"];
+const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+// PWA install
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("#install").style.display="block"});
+$("#install").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$("#install").style.display="none"}};
+if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(()=>{});
+// config load: network -> ETag 304 -> localStorage last-known-good
+async function load(){
+  $("#grid").innerHTML=`<div class="skel" style="grid-column:1/2"></div><div class="skel" style="grid-column:2/3"></div><div class="skel" style="grid-column:1/2"></div><div class="skel" style="grid-column:2/3"></div>`;
+  try{
+    const r=await fetch("https://nexora-admin-iota.vercel.app/api/config",{headers:ETag?{"If-None-Match":ETAG}:{},cache:"no-store"});
+    if(r.status===304){ CFG=JSON.parse(localStorage.getItem("nx_cfg")); }
+    else{ const j=await r.json(); CFG=j.data; ETAG=r.headers.get("ETag");
+      localStorage.setItem("nx_cfg",JSON.stringify(CFG)); localStorage.setItem("nx_etag",ETAG||"");
+      $("#ver").textContent="v"+j.config_version; }
+    $("#offbar").style.display="none";
+  }catch(e){
+    CFG=JSON.parse(localStorage.getItem("nx_cfg")||"null");
+    if(CFG) $("#offbar").style.display="block";
+  }
+  if(!CFG){ $("#grid").innerHTML=`<div class="empty" style="grid-column:1/3"><div style="font-size:30px">📡</div><b style="color:#ECE9F7">Could not reach the NEXORA server</b><br><span style="font-size:11.5px">Check internet and retry — the app will also work offline once loaded once.</span><br><br><button onclick="if(location.protocol==='file:'&&window.NexoraNative){NexoraNative.reloadOnline()}else{load()}" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);border:none;color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;font-size:12px">⟳ RETRY</button> <button onclick="showSetup()" style="background:none;border:1px solid rgba(167,139,250,.3);color:#A79FC4;padding:10px 16px;border-radius:10px;font-size:12px">Change server URL</button></div>`; return }
+  $("#ver").textContent="v"+(JSON.parse(localStorage.getItem("nx_v")||"0"));
+  render("home");
+}
+async function loadV(){try{const r=await fetch("https://nexora-admin-iota.vercel.app/api/version");const j=await r.json();$("#ver").textContent="v"+j.config_version;localStorage.setItem("nx_v",j.config_version)}catch(e){}}
+function cats(){const m={};(CFG.categories||[]).forEach(c=>m[c.id]=c.name);return m}
+function render(tab,q=""){
+  const cards=(CFG.cards||[]).filter(c=>!q||c.name.toLowerCase().includes(q)||c.description.toLowerCase().includes(q));
+  const S=CFG.settings||{};
+  let list=cards;
+  if(tab==="trend") list=cards.filter(c=>c.label==="TRENDING"||c.label==="HOT");
+  if(tab==="fav") list=cards.filter(c=>FAV.includes(String(c.id)));
+  const g=$("#grid"); let html="";
+  const show=(arr)=>arr.map(c=>`
+   <div class="tile">
+     <div class="head"><span class="av" style="background:${AVCOLORS[c.id%AVCOLORS.length]}">${esc(c.name[0]||"•")}</span><b>${esc(c.name)}</b></div>
+     <button class="fav ${FAV.includes(String(c.id))?"on":""}" onclick="toggleFav(${c.id},this)">★</button>
+     <div class="d" style="margin-top:6px">${esc(c.description)}</div>
+     <div class="meta">${c.label?`<span class="pill ${c.label}">${c.label}</span>`:""}${c.featured?`<span class="pill">VIP</span>`:""}
+       <span>Servers: ${c.servers.length}</span></div>
+     <button class="srv" style="margin-top:10px;width:100%" onclick="openSheet(${c.id})">
+       <b>OPEN</b><span class="tag">${(cats()[c.category]||"").toUpperCase()}</span></button>
+   </div>`).join("");
+  if(tab==="home"&&!q){
+    const feat=cards.filter(c=>c.featured), hot=cards.filter(c=>c.label==="TRENDING");
+    const rec=REC.map(id=>cards.find(c=>String(c.id)===id)).filter(Boolean);
+    if(rec.length) html+=`<div class="sec">RECENTLY OPENED</div><div class="grid">${show(rec.slice(0,4))}</div>`;
+    if(S.sections_featured!=="0"&&feat.length) html+=`<div class="sec">FEATURED</div><div class="grid">${show(feat.slice(0,4))}</div>`;
+    if(S.sections_trending!=="0"&&hot.length) html+=`<div class="sec">TRENDING</div><div class="grid">${show(hot.slice(0,4))}</div>`;
+    if(S.sections_popular!=="0") html+=`<div class="sec">ALL APPS</div><div class="grid">${show(cards)}</div>`;
+  } else {
+    html+= list.length?`<div class="grid">${show(list)}</div>`:`<div class="empty" style="grid-column:1/3">${tab==="fav"?"No favourites yet — tap ★ on any app.":"No apps match your search."}</div>`;
+  }
+  g.outerHTML=`<div class="grid" id="grid">${html}</div>`;
+  const a=(CFG.announcements||[])[0];
+  $("#ann").innerHTML=(tab==="home"&&a&&!q)?`<div class="ann"><b>${esc(a.title)}</b><p>${esc(a.body)}</p></div>`:"";
+}
+function toggleFav(id,el){const i=FAV.indexOf(String(id)); if(i>=0)FAV.splice(i,1); else FAV.push(String(id));
+ localStorage.setItem("nx_fav",JSON.stringify(FAV)); el.classList.toggle("on"); if(document.querySelector("#bottomnav .on").dataset.t==="fav")render("fav")}
+function openSheet(id){const c=CFG.cards.find(x=>x.id===id); if(!c)return;
+ const s=$("#sheet");
+ s.innerHTML=`<h3>${esc(c.name)}</h3><div class="h">Choose a server — each server is a separate website.</div>`+
+  c.servers.map((sv,i)=>`<a class="srv" href="${esc(sv.url)}" target="_blank" rel="noopener" onclick="markRec(${c.id})">
+   <div><b>Server ${i+1}</b><div class="u">${esc(sv.url)}</div></div>
+   ${sv.is_default?'<span class="tag">DEFAULT</span>':""}${sv.maintenance?'<span class="tag" style="color:var(--warn)">MAINT</span>':""}</a>`).join("")+
+  `<button style="width:100%;background:none;border:1px solid var(--line);color:var(--sub);border-radius:12px;padding:10px;margin-top:6px" onclick="closeSheet()">Cancel</button>`;
+ $("#sheetbg").style.display="flex"}
+function closeSheet(){$("#sheetbg").style.display="none"}
+function markRec(id){const i=REC.indexOf(String(id)); if(i>=0)REC.splice(i,1); REC.unshift(String(id)); localStorage.setItem("nx_rec",JSON.stringify(REC.slice(0,12)))}
+$("#sheetbg").onclick=e=>{if(e.target.id==="sheetbg")closeSheet()};
+$("#search").oninput=e=>render(document.querySelector("#bottomnav .on").dataset.t,e.target.value.trim().toLowerCase());
+document.querySelectorAll("#bottomnav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("#bottomnav button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+ $("#search").value=""; render(b.dataset.t)});
+load(); loadV();
+</script>
+</body>
+</html>

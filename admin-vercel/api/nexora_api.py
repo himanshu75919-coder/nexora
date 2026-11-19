@@ -131,8 +131,8 @@ def _seed_core(c):
     for k, v in {"welcome_title": "Welcome to NEXORA", "welcome_sub": "ONE PLATFORM. MULTIPLE WEBSITES. UNLIMITED CONFIGURABILITY.",
                  "sections_featured": "1", "sections_popular": "1", "sections_recent": "1", "sections_trending": "1",
                  "flag_ai_assistant": "0", "flag_downloads": "1", "flag_notifications": "1", "flag_browser_internal": "1",
-                 "app_version_code": "4", "app_version_name": "1.3.0", "apk_url": "/nexora.apk",
-                 "release_notes": "41-cards catalog, in-app updates, faster app"}.items():
+                 "app_version_code": "5", "app_version_name": "1.3.1", "apk_url": "/nexora.apk",
+                 "release_notes": "Firebase hosting migration, 40-cards catalog, in-app updates"}.items():
         c.execute("INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)", (k, v))
 
 def seed():
