@@ -49,8 +49,9 @@ import org.json.JSONObject;
  */
 public class MainActivity extends Activity {
 
-    private static final String DEFAULT_BASE = "https://nexora-admin-iota.vercel.app";
-    private static final String REMOTE = DEFAULT_BASE + "/app";
+    private static final String API_BASE = "https://nexora-admin-iota.vercel.app";
+    private static final String DEFAULT_BASE = API_BASE;
+    private static final String REMOTE = "https://nexora-991be.web.app/app";
     private static final String LOCAL_FALLBACK = "file:///android_asset/fallback.html";
     private static final long INSTALLED_CODE = 3;
 
@@ -154,7 +155,7 @@ public class MainActivity extends Activity {
     /* ---------------- IN-APP UPDATE ---------------- */
     private void checkUpdate() {
         try {
-            URL u = new URL(DEFAULT_BASE + "/api/update");
+            URL u = new URL(API_BASE + "/api/update");
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
             c.setConnectTimeout(8000); c.setReadTimeout(8000);
             BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream()));
@@ -185,7 +186,7 @@ public class MainActivity extends Activity {
 
     private void startUpdateDownload(String apkPath) {
         try {
-            String full = apkPath.startsWith("http") ? apkPath : DEFAULT_BASE + apkPath;
+            String full = apkPath.startsWith("http") ? apkPath : API_BASE + apkPath;
             DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             DownloadManager.Request req = new DownloadManager.Request(Uri.parse(full));
             req.setTitle("NEXORA Update");
