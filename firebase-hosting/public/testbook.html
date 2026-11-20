@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TestBook V2 — Full Catalog</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0B1220;color:#E6EDF7;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.hdr{position:sticky;top:0;z-index:9;background:#0D1526cc;backdrop-filter:blur(8px);border-bottom:1px solid #1E2A3F;padding:14px 18px;display:flex;align-items:center;gap:10px}
+.hdr .lg{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#14B8A6,#0EA5E9);display:flex;align-items:center;justify-content:center;font-size:18px}
+.hdr h1{font-size:17px;font-weight:800}
+.hdr h1 span{color:#14B8A6}
+.hdr .sub{font-size:10.5px;color:#7E8BA3;margin-top:1px}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 14px 60px}
+.searchbar{display:flex;gap:8px;margin:12px 0}
+.searchbar input{flex:1;background:#131E33;border:1.5px solid #24344F;color:#E6EDF7;padding:13px 16px;border-radius:12px;font-size:15px;outline:none}
+.searchbar input:focus{border-color:#14B8A6}
+.searchbar button{background:#14B8A6;color:#04121F;border:none;padding:0 20px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer}
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tab{padding:8px 16px;border-radius:99px;background:#131E33;border:1.5px solid #24344F;color:#9FB0CC;font-size:13px;font-weight:700;cursor:pointer}
+.tab.on{background:#14B8A6;color:#04121F;border-color:#14B8A6}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 16px}
+.chip{padding:6px 13px;border-radius:99px;background:#16223A;border:1px solid #263752;color:#AFC0DC;font-size:12.5px;font-weight:600;cursor:pointer}
+.chip:hover{border-color:#14B8A6;color:#14B8A6}
+.meta{font-size:12.5px;color:#7E8BA3;margin:2px 0 12px}
+.meta b{color:#14B8A6}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:#111B2E;border:1px solid #1F2C44;border-radius:14px;padding:13px;display:flex;gap:12px;transition:.15s}
+.card:hover{border-color:#14B8A6;transform:translateY(-2px)}
+.card img{width:46px;height:46px;border-radius:10px;background:#0B1220;object-fit:contain;padding:3px}
+.card .nm{font-size:14px;font-weight:800;line-height:1.25}
+.badge{display:inline-block;font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.tb{background:#2563EB33;color:#7CB0FF}.gd{background:#F59E0B33;color:#FBBF24}
+.st{font-size:12px;color:#8FA2C0;margin-top:5px;display:flex;gap:10px;flex-wrap:wrap}
+.st b{color:#C9D6EC;font-weight:700}
+.fr{color:#2DD4A7!important}
+.exp{margin-left:auto;align-self:center;background:#14B8A6;color:#04121F;border:none;padding:8px 14px;border-radius:9px;font-weight:800;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.pg{display:flex;justify-content:center;align-items:center;gap:14px;margin:22px 0 8px}
+.pg button{background:#131E33;border:1.5px solid #24344F;color:#C9D6EC;padding:9px 18px;border-radius:10px;font-weight:800;cursor:pointer}
+.pg button:disabled{opacity:.35;cursor:default}
+.pg button.nx{background:#14B8A6;color:#04121F;border-color:#14B8A6}
+.spin{display:none;text-align:center;padding:40px;color:#14B8A6}
+.spin .c{width:42px;height:42px;border:4px solid #14B8A655;border-top-color:#14B8A6;border-radius:50%;margin:0 auto 12px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.err{display:none;background:#3B1220;border:1px solid #7F1D1D;color:#FCA5A5;padding:14px;border-radius:12px;margin:12px 0;font-size:13.5px}
+/* detail modal */
+.mv{position:fixed;inset:0;background:#050912E6;z-index:20;display:none;overflow-y:auto;padding:20px 14px}
+.mbox{max-width:760px;margin:0 auto;background:#0F1930;border:1px solid #24344F;border-radius:18px;padding:20px}
+.mbox h2{font-size:17px;margin-bottom:4px}
+.mbox .mst{font-size:13px;color:#8FA2C0;margin-bottom:16px}
+.sec{background:#131E33;border:1px solid #1F2C44;border-radius:11px;padding:11px 14px;margin:8px 0;font-size:13.5px;display:flex;align-items:center;gap:10px}
+.sec .p{color:#FBBF24;font-weight:700}.sec .f{color:#2DD4A7;font-weight:700}
+.sec .ss{font-size:11.5px;color:#6C7C99}
+.x{float:right;background:#24344F;color:#fff;border:none;width:32px;height:32px;border-radius:9px;font-size:16px;cursor:pointer}
+.ft{text-align:center;color:#5B6B87;font-size:11.5px;margin-top:26px;line-height:1.7}
+.ft a{color:#14B8A6;text-decoration:none}
+@media(max-width:640px){.grid{grid-template-columns:1fr}.hdr h1{font-size:15px}}
+</style></head><body>
+<div class="hdr"><div class="lg">📚</div><div><h1>TestBook <span>V2</span> — Full Catalog</h1><div class="sub">Testbook (1010) + Guidely (24) · 2,55,996 tests · Chrome-Web-Viewer</div></div></div>
+<div class="wrap">
+<div class="searchbar"><input id="q" placeholder="Search exams — SSC, Railway, Banking, UPSC…" value=""><button onclick="go(1)">Search</button></div>
+<div class="tabs"><div class="tab on" data-e="all" onclick="setE(this)">All Sources</div><div class="tab" data-e="tb" onclick="setE(this)">Testbook</div><div class="tab" data-e="gd" onclick="setE(this)">Guidely</div></div>
+<div class="chips" id="chips"></div>
+<div class="meta" id="meta"></div>
+<div class="err" id="err"></div>
+<div class="spin" id="spin"><div class="c"></div>Loading catalog…</div>
+<div class="grid" id="grid"></div>
+<div class="pg" id="pg"><button id="pv" onclick="go(page-1)">‹ Prev</button><span id="pgt" style="color:#7E8BA3;font-size:13px"></span><button class="nx" id="nx" onclick="go(page+1)">Next ›</button></div>
+<div class="ft">Chrome-Web-Viewer · powered by StudyKing master-API (public) · deployed on <a href="https://nexora-991be.web.app">NEXORA Firebase</a><br>TestBook-V2 catalog: 1034 series · 255,996 tests · free-tests marked 🟢</div>
+</div>
+<div class="mv" id="mv"><div class="mbox"><button class="x" onclick="closeM()">✕</button><div id="mbody"></div></div></div>
+<script>
+const K='https://open-mora-natking151-ea9216fb.koyeb.app';
+let engine='all', page=1, lastQ='';
+const CHIPS=['ssc','rrb','railway','police','bank','ibps','sbi po','upsc','cds','nda','defence','ctet','tet','uptet','reet','bpsc','state exam','ssc cgl','chsl','mts','group d','ntpc','alp','je','delhi police','ugc net','ca','gate','jee','neet'];
+document.getElementById('chips').innerHTML=CHIPS.map(c=>`<div class="chip" onclick="chip('${c}')">${c}</div>`).join('');
+const q=document.getElementById('q');
+q.addEventListener('keydown',e=>{if(e.key==='Enter')go(1)});
+function setE(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');engine=el.dataset.e;go(1)}
+function chip(c){q.value=c;go(1)}
+async function go(p){
+  page=Math.max(1,p);lastQ=q.value.trim();
+  document.getElementById('spin').style.display='block';document.getElementById('err').style.display='none';document.getElementById('grid').innerHTML='';
+  document.getElementById('meta').textContent='';document.getElementById('pg').style.display='none';
+  try{
+    const u=`${K}/testbookv2/search?q=${encodeURIComponent(lastQ)}&page=${page}&engine=${engine}`;
+    const r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const pg=d.pagination||{};const data=d.data||[];
+    document.getElementById('spin').style.display='none';
+    const cnt=d.counts||{};
+    document.getElementById('meta').innerHTML=`<b>${(pg.total||0).toLocaleString('en-IN')}</b> series found · Testbook <b>${(cnt.tb||0).toLocaleString('en-IN')}</b> · Guidely <b>${(cnt.gd||0).toLocaleString('en-IN')}</b> · showing page <b>${pg.page||page}</b> of <b>${pg.totalPages||1}</b>`;
+    if(!data.length){document.getElementById('grid').innerHTML='<div style="color:#7E8BA3;padding:30px;text-align:center">No series found for this search.</div>';return}
+    document.getElementById('grid').innerHTML=data.map(s=>{
+      const ic=s.icon?`<img src="${s.icon}" loading="lazy" onerror="this.style.visibility='hidden'">`:'<div style="width:46px"></div>';
+      const fr=(s.freeTestCount||0)>0?`<span class="fr">🟢 ${s.freeTestCount} free</span>`:'';
+      return `<div class="card">${ic}<div><div class="nm">${esc(s.name)}<span class="badge ${s.engine==='tb'?'tb':'gd'}">${s.engine==='tb'?'TB':'GD'}</span></div>
+      <div class="st"><span>📝 <b>${(s.totalTestCount||0).toLocaleString('en-IN')}</b> tests</span>${fr}<span>👁 ${(s.totalAttempts||0).toLocaleString('en-IN')}</span>${s.languages&&s.languages.length?`<span>🌐 ${s.languages.slice(0,2).join(', ')}${s.languages.length>2?'+'+ (s.languages.length-2):''}</span>`:''}</div></div>
+      <button class="exp" onclick="detail('${s.slug}')">Explore ›</button></div>`}).join('');
+    document.getElementById('pg').style.display='flex';
+    document.getElementById('pgt').textContent=`Page ${pg.page||page} of ${pg.totalPages||1}`;
+    document.getElementById('pv').disabled=(pg.page||page)<=1;
+    document.getElementById('nx').disabled=(pg.page||page)>=(pg.totalPages||1);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){
+    document.getElementById('spin').style.display='none';
+    const er=document.getElementById('err');er.style.display='block';
+    er.textContent='⚠️ Load failed: '+e.message+' — master-API thoda busy ho sakta hai, thodi der baad retry karein.';
+  }
+}
+async function detail(slug){
+  document.getElementById('mv').style.display='block';document.getElementById('mbody').innerHTML='<div class="spin" style="display:block"><div class="c"></div>Loading series…</div>';
+  try{
+    const r=await fetch(`${K}/testbookv2/series/${encodeURIComponent(slug)}`);const d=await r.json();
+    if(!d.success)throw new Error('series load fail');
+    const s=d.series;const secs=s.sections||[];
+    document.getElementById('mbody').innerHTML=`<h2>${esc(s.name)}</h2>
+    <div class="mst">${s.engine==='tb'?'Testbook':'Guidely'} · 📝 <b>${(s.totalTestCount||0).toLocaleString('en-IN')}</b> tests · 🟢 ${s.freeTestCount||0} free · 💰 ${s.paidTestCount||0} paid · 👁 ${(s.totalAttempts||0).toLocaleString('en-IN')} attempts${s.languages?' · 🌐 '+s.languages.join(', '):''}</div>
+    ${s.description?`<div style="font-size:12.5px;color:#8FA2C0;margin-bottom:12px;max-height:80px;overflow:auto">${esc(String(s.description).slice(0,400))}</div>`:''}
+    <div style="font-weight:800;font-size:13.5px;margin:6px 0 4px;color:#14B8A6">SECTION-BREAKDOWN (${secs.length})</div>
+    ${secs.map(x=>`<div class="sec"><div style="flex:1"><b>${esc(x.name||x.shortName||'Section')}</b><div class="ss">${(x.subsections||[]).map(y=>esc(y.name)).join(' · ')||'—'}</div></div><div><span class="f">✓${x.freeTestCount||0}</span> <span class="p">🔒${x.paidTestCount||0}</span></div></div>`).join('')||'<div class="sec">No section data</div>'}
+    <div style="font-size:11.5px;color:#5B6B87;margin-top:12px">Actual test-taking app-ke-andar (bind-session) hota hai — ye viewer catalog+breakdown dikhata hai.</div>`;
+  }catch(e){document.getElementById('mbody').innerHTML='<div class="err" style="display:block">Detail load fail: '+e.message+'</div>'}
+}
+function closeM(){document.getElementById('mv').style.display='none'}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('mv').addEventListener('click',e=>{if(e.target.id==='mv')closeM()});
+go(1);
+</script></body></html>
