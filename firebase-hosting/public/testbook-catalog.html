@@ -39,14 +39,14 @@ body{background:#0B1220;color:#E6EDF7;font-family:system-ui,-apple-system,'Segoe
 .ft{text-align:center;color:#5B6B87;font-size:11px;margin-top:26px;line-height:1.7}
 @media(max-width:640px){.grid{grid-template-columns:1fr}}
 </style></head><body>
-<div class="hdr"><h1>StudyKing <b>→</b> TestBook Catalog</h1><div class="sub">App-ka-pura-Testbook · 1034 series · 2,55,996 tests · sections-bhi-ander · 100%-offline-page</div></div>
+<div class="hdr"><h1>StudyKing <b>→</b> TestBook Catalog</h1><div class="sub">App-ka-pura-Testbook · 1034 series · 2,55,996 tests · app-me-SAB-FREE (koi-payment-nahi) · 100%-offline-page</div></div>
 <div class="wrap">
 <div class="sbar"><input id="q" placeholder="Search — SSC, Railway, Bank, Police, CTET…"></div>
 <div class="tabs"><div class="tab on" data-e="all" onclick="setE(this)">All (1034)</div><div class="tab" data-e="tb" onclick="setE(this)">Testbook</div><div class="tab" data-e="gd" onclick="setE(this)">Guidely</div><div class="tab" data-e="fr" onclick="setE(this)">🟢 Free-tests</div></div>
 <div class="chips" id="chips"></div>
 <div class="meta" id="meta"></div>
 <div class="grid" id="grid"></div>
-<div class="ft">Data: StudyKing v4.2.4 ka apna Testbook-API — pura-page-offline-baked (koi-live-call-nahi, kabhi-load-fail-nahi)<br>Sections-button → instant (page-ke-ander-baked) · Real-Site → official-website</div>
+<div class="ft">Data: StudyKing v4.2.4 ka apna Testbook-API — pura-page-offline-baked (koi-live-call-nahi, kabhi-load-fail-nahi)<br>Sections-button → instant (page-ke-ander-baked) · Real-Site → official-website<br>🔒-locks-hataye-jachuke — wo-sirf-Testbook-ke-METADATA-tags-thе, StudyKing-me-sab-tests-free-hain (boss-verified ✓)</div>
 </div>
 <div class="mv" id="mv" onclick="if(event.target.id==='mv')closeM()"><div class="mbox"><button class="x" onclick="closeM()">✕</button><div id="mb"></div></div></div>
 <script>
@@ -89,7 +89,8 @@ function detail(slug){
   <div style="font-size:12.5px;color:#8FA2C0;margin-bottom:12px">${engn==='tb'?'Testbook':'Guidely'} · 📝 <b>${fmt(tests)}</b> tests · 🟢 ${fmt(free)} free · 👁 ${fmt(att)} · 🌐 ${esc(langs)}</div>
   ${d.desc?`<div style="font-size:12px;color:#8FA2C0;margin-bottom:12px;max-height:70px;overflow:auto">${esc(d.desc)}</div>`:''}
   <div style="font-weight:800;font-size:13px;color:#14B8A6;margin:4px 0">SECTIONS (${d.secs.length})</div>
-  ${d.secs.map(x=>`<div class="sec"><div style="flex:1"><b>${esc(x.n)}</b>${x.s&&x.s.length?`<div class="ss">${x.s.map(esc).join(' · ')}</div>`:''}</div><div><span class="f">✓${fmt(x.f)}</span><span class="p">🔒${fmt(x.p)}</span></div></div>`).join('')||'<div class="sec">Section-data nahi mila</div>'}`;
+    <div style="font-size:11px;color:#6C7C99;margin-bottom:6px">ℹ️ Ye-counts-Testbook-ke-original-tags-hain — <b style="color:#2DD4A7">StudyKing-app-me-SAB-tests-FREE-khel-jaate-hain</b> (app-me-koi-payment-system-hi-nahi-hain)</div>
+  ${d.secs.map(x=>`<div class="sec"><div style="flex:1"><b>${esc(x.n)}</b>${x.s&&x.s.length?`<div class="ss">${x.s.map(esc).join(' · ')}</div>`:''}</div><div><span class="f">✓${fmt(x.f)}</span><span class="p" style="color:#8FA2C0">• ${fmt(x.p)}</span></div></div>`).join('')||'<div class="sec">Section-data nahi mila</div>'}`;
 }
 function closeM(){document.getElementById('mv').style.display='none'}
 render();
